@@ -4,7 +4,7 @@
     "title": "3D Artist",
     "phone": "+91 6363941085",
     "email": "zulfekarahmad15@gmail.com",
-    "address": "193, Sampurna Play School, Sultanpur, South Delhi, 110030",
+    "address": "Sultanpur, South Delhi, 110030",
     "portfolio": {
       "platform": "ArtStation",
       "username": "zulfekarahmad15",
@@ -14,12 +14,16 @@
       {
         "platform": "LinkedIn",
         "username": "zulfekarahmad15",
-        "url": "https://www.linkedin.com/in/zulfekarahmad15/"
+        "url": "https://www.linkedin.com/in/zulfekar-ahmad-2172361b8/"
       }
     ]
   },
-  "professional_summary": "A skilled 3D artist with 5+ years of experience in creating AR models, environments, props, product visualization and animation. Expertise in producing a diverse range of 3D models, animations and scenes that deliver visually compelling representations.",
-  "languages": ["English", "Hindi", "Urdu"],
+  "professional_summary": "A skilled 3D Artist with 5+ years of experience specializing in AR-ready 3D models, environments, props, product visualization, and animation. Experienced in creating high-quality, optimized 3D assets and engaging digital experiences across a wide range of projects.\n\nI help businesses bring their products to life through interactive 3D experiences, web-based product configurators, AR-ready assets, and high-quality product animations for marketing and advertising. My work combines strong artistic skills with technical optimization to create visually impactful content that enhances customer engagement, strengthens product presentation, and supports brand communication.\n\nFrom concept to final delivery, I focus on creating high-quality 3D solutions that help businesses showcase their products, enhance their digital presence, and connect with their audience more effectively.",
+  "languages": [
+    "English",
+    "Hindi",
+    "Urdu"
+  ],
   "hard_skills": [
     "Autodesk Maya",
     "Blender",
@@ -28,15 +32,13 @@
     "Substance Sampler",
     "Adobe Photoshop",
     "Adobe Illustrator",
-     "Adobe After Effects",
+    "Adobe After Effects",
     "Adobe Premiere Pro",
     "Marmoset Toolbag"
   ],
-
   "education": [
     {
       "qualification": "B.Sc in Graphics and VFX - Jain University Bangalore"
-    
     }
   ],
   "professional_experience": [
@@ -49,19 +51,17 @@
         "Managed and delivered client projects within tight timelines, ensuring high-quality outcomes and fast client approvals with minimal feedback."
       ]
     },
-   
     {
       "job_title": "3D Junior Artist",
-       "period": "Aug 2022 - Oct 2023",
+      "period": "Aug 2022 - Oct 2023",
       "responsibilities": [
         "Worked in a challenging environment and specialized in modelling and texturing low-poly environments from 2D concept art.",
         "Created various environments for educational animated videos."
       ]
     },
-     {
+    {
       "job_title": "Associate CGI",
       "company": "BYJU'S The Learning App",
-     
       "period": "Nov 2021 - Jul 2022",
       "responsibilities": [
         "Specialized in modelling and texturing of real-time, low-poly assets for use in Amazon AR.",
@@ -73,49 +73,79 @@
     {
       "title": "AR Product Configurator",
       "type": "AR Experience",
-      "tech": ["Three.js", "WebXR", "Marmoset Toolbag"],
+      "thumbnail": "assets/models/Live_Projects.jpg",
+      "tech": [
+        "Three.js",
+        "WebXR",
+        "Marmoset Toolbag"
+      ],
       "description": "Interactive 3D product visualization with augmented reality for e-commerce, enabling customers to preview products in their space.",
       "links": [
         {
           "name": "ArtStation",
-          "url": "https://www.artstation.com/zulfekarahmad15"
+          "url": "https://www.artstation.com/artwork/vz2wPA"
         }
       ]
     },
     {
       "title": "Low-Poly Environment Pack",
       "type": "Game Asset",
-      "tech": ["Blender", "Substance Painter", "Unity"],
+      "thumbnail": "assets/models/Low_poly_conference-room.jpg",
+      "tech": [
+        "Blender",
+        "Substance Painter",
+        "Unity"
+      ],
       "description": "Collection of optimized low-poly environments for real-time rendering in educational and gaming applications.",
       "links": [
         {
           "name": "ArtStation",
-          "url": "https://www.artstation.com/zulfekarahmad15"
+          "url": "https://www.artstation.com/artwork/8bE2GE"
         }
       ]
     },
     {
       "title": "Product Visualization Scene",
       "type": "3D Render",
-      "tech": ["Blender", "Cycles", "After Effects"],
+      "thumbnail": "assets/models/Perfume_Thumbnail.jpg",
+      "tech": [
+        "Blender",
+        "Cycles",
+        "After Effects"
+      ],
       "description": "High-quality 3D product visualization with realistic materials and lighting for marketing purposes.",
       "links": [
         {
           "name": "ArtStation",
-          "url": "https://www.artstation.com/zulfekarahmad15"
+          "url": "https://www.artstation.com/artwork/XJv1mn"
         }
       ]
     }
   ],
-
   "live_projects": [
     {
-      "title": "Brasseler USA 3D Product Configurator",
-      "type": "Interactive 3D Configurator",
-      "description": "Interactive 3D product visualization experience developed for configurable dental products, enabling users to explore product options and visualize configurations in real time.",
-      "url": "https://shop.brasselerusa.com/threeKit/configurator",
+      "title": "Milwaukee Tool BOLT 100 Configurator",
+      "type": "Product Configurator",
+      "description": "Interactive product configuration experience created for Milwaukee Tool, bringing configurable product visualization to an online customer experience.",
+      "url": "https://deat.milwaukeetool.eu/bolt-100-konfigurator-1/",
       "platform": "Threekit",
-      "technologies": ["Threekit", "3D Visualization", "Product Configurator"]
+      "technologies": [
+        "Threekit",
+        "3D Configurator",
+        "Product Visualization"
+      ]
+    },
+    {
+      "title": "Current Backyard 3D Product Configurator",
+      "type": "Interactive 3D Configurator",
+      "description": "Interactive 3D product visualization experience developed for configurable outdoor products, enabling users to explore product options and visualize their selected configurations in real time.",
+      "url": "https://current-backyard-prod.3kit.com/",
+      "platform": "Threekit",
+      "technologies": [
+        "Threekit",
+        "3D Visualization",
+        "Product Configurator"
+      ]
     },
     {
       "title": "Badlands Gear Bino Builder",
@@ -123,43 +153,48 @@
       "description": "Interactive binocular configuration experience allowing customers to explore and customize product options through an engaging 3D interface.",
       "url": "https://www.badlandsgear.com/pages/bino-builder",
       "platform": "Threekit",
-      "technologies": ["Threekit", "3D Configurator", "Product Visualization"]
+      "technologies": [
+        "Threekit",
+        "3D Configurator",
+        "Product Visualization"
+      ]
     },
     {
-      "title": "HexArmor Customization Experience",
-      "type": "Interactive Product Configurator",
-      "description": "Interactive customization experience for safety products, combining 3D product visualization with configurable product options to create a more engaging purchasing journey.",
-      "url": "https://www.hexarmor.com/customize",
+      "title": "Project Ergo Chair Configurator",
+      "type": "3D Product Configurator",
+      "description": "Interactive chair configuration experience showcasing configurable ergonomic seating products through real-time 3D visualization and product options.",
+      "url": "https://project-ergo.3kit.com/?chairType=Lagos",
       "platform": "Threekit",
-      "technologies": ["Threekit", "3D Configurator", "Product Customization"]
+      "technologies": [
+        "Threekit",
+        "3D Configurator",
+        "Product Visualization",
+        "Interactive 3D"
+      ]
     },
     {
-      "title": "Tiki Interactive 3D Experience",
-      "type": "Interactive 3D Experience",
-      "description": "Interactive web-based 3D product experience focused on presenting configurable products through real-time visualization.",
-      "url": "https://tiki.3kit.com/",
+      "title": "Cutest Coops Custom Coop Builder",
+      "type": "3D Product Configurator",
+      "description": "Interactive chicken coop configuration experience allowing customers to customize a product and visualize their selected configuration before purchase.",
+      "url": "https://cutestcoops.com/products/chateau-coop-8x10-configure-your-own",
       "platform": "Threekit",
-      "technologies": ["Threekit", "Web 3D", "Interactive Visualization"]
+      "technologies": [
+        "Threekit",
+        "3D Configurator",
+        "Product Customization"
+      ]
     },
     {
       "title": "Hestia Sofa Personalisation",
       "type": "3D Product Personalization",
       "description": "Interactive sofa personalization experience allowing customers to explore product variations and visualize different configurations before making a purchase.",
-      "url": "https://www.hestiasofa.ma/personnalisation-smart",
+      "url": "https://www.hestiasofa.ma/personnalisation-maeva",
       "platform": "Threekit",
       "technologies": [
         "Threekit",
         "3D Product Visualization",
         "Product Personalization"
       ]
-    },
-    {
-      "title": "Milwaukee Tool BOLT 100 Configurator",
-      "type": "Product Configurator",
-      "description": "Interactive product configuration experience created for Milwaukee Tool, bringing configurable product visualization to an online customer experience.",
-      "url": "https://deat.milwaukeetool.eu/bolt-100-konfigurator-1/",
-      "platform": "Threekit",
-      "technologies": ["Threekit", "3D Configurator", "Product Visualization"]
     },
     {
       "title": "Char-Broil Outdoor Kitchen Planner",
@@ -175,34 +210,6 @@
       ]
     },
     {
-      "title": "GCX Tablet Roll Stand Configurator",
-      "type": "Product Configurator",
-      "description": "Interactive 3D configurator for healthcare technology products, enabling customers to explore tablet roll stand configurations and product options.",
-      "url": "https://www.gcx.com/tablet-roll-stand-configurator/",
-      "platform": "Threekit",
-      "technologies": ["Threekit", "3D Configurator", "Product Visualization"]
-    },
-    {
-      "title": "Cutest Coops Custom Coop Builder",
-      "type": "3D Product Configurator",
-      "description": "Interactive chicken coop configuration experience allowing customers to customize a product and visualize their selected configuration before purchase.",
-      "url": "https://cutestcoops.com/products/chateau-coop-8x10-configure-your-own",
-      "platform": "Threekit",
-      "technologies": ["Threekit", "3D Configurator", "Product Customization"]
-    },
-    {
-      "title": "Architectural Canopies Configurator",
-      "type": "Architectural Configurator",
-      "description": "Interactive 3D configuration experience for architectural canopy products, helping customers explore different product configurations through real-time visualization.",
-      "url": "https://www.architecturalcanopies.com/configurator/",
-      "platform": "Threekit",
-      "technologies": [
-        "Threekit",
-        "3D Configurator",
-        "Architectural Visualization"
-      ]
-    },
-    {
       "title": "Lilitab Kiosk Builder",
       "type": "Interactive Product Configurator",
       "description": "Interactive kiosk configuration experience allowing customers to build and visualize customized kiosk solutions with different product options and accessories.",
@@ -213,19 +220,6 @@
         "3D Configurator",
         "Product Visualization",
         "Kiosk Configuration"
-      ]
-    },
-    {
-      "title": "Project Ergo Chair Configurator",
-      "type": "3D Product Configurator",
-      "description": "Interactive chair configuration experience showcasing configurable ergonomic seating products through real-time 3D visualization and product options.",
-      "url": "https://project-ergo.3kit.com/?chairType=Lagos",
-      "platform": "Threekit",
-      "technologies": [
-        "Threekit",
-        "3D Configurator",
-        "Product Visualization",
-        "Interactive 3D"
       ]
     }
   ]

@@ -1,9 +1,54 @@
 /* ZULF — live studio scenes.
-   The hero turns the real Noble_Isle.fbx on a warm turntable; the
+   The hero turns a real model on a warm turntable; the
    work cards each run a small procedural "study" so the craft is
-   visible everywhere. Degrades to static plates when WebGL is out. */
+   visible everywhere. Loads FBX, GLB/GLTF and OBJ. Degrades to
+   static plates when WebGL is out. */
 import * as THREE from "three";
 import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
+
+/* pick a loader from the file extension — fbx / glb / gltf / obj */
+function loaderFor(url, manager) {
+  const ext = String(url || "").split("?")[0].split("#")[0].split(".").pop().toLowerCase();
+  if (ext === "glb" || ext === "gltf") return new GLTFLoader(manager);
+  if (ext === "obj") return new OBJLoader(manager);
+  return new FBXLoader(manager);
+}
+
+function isBlobUrl(url) {
+  return typeof url === "string" && url.slice(0, 5) === "blob:";
+}
+
+/* last path segment, decoded — used to match texture references by filename */
+function baseName(url) {
+  return decodeURIComponent(
+    String(url).split(/[\\/]/).pop().split("?")[0]
+  ).toLowerCase();
+}
+
+/* a manager that redirects texture requests to uploaded texture files */
+function textureManager(textures) {
+  const map = new Map();
+  (textures || []).forEach((t) => {
+    if (!t) return;
+    const name = typeof t === "string" ? baseName(t) : String(t.name || "").toLowerCase();
+    const url = typeof t === "string" ? t : t.url;
+    if (name && url) map.set(name, url);
+  });
+  const manager = new THREE.LoadingManager();
+  if (map.size) {
+    manager.setURLModifier((url) => {
+      if (/^(blob:|data:)/i.test(url)) return url;
+      return map.get(baseName(url)) || url;
+    });
+  }
+  return manager;
+}
+
+const hasMaps = (m) =>
+  !!m &&
+  !!(m.map || m.normalMap || m.roughnessMap || m.metalnessMap || m.aoMap || m.emissiveMap);
 
 const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -27,7 +72,8 @@ function makeRenderer(container, maxDpr) {
 }
 
 function addLights(scene) {
-  const key = new THREE.DirectionalLight(0xffd9a8, 2.6);
+  // white / natural — no orange cast, true albedo
+  const key = new THREE.DirectionalLight(0xffffff, 2.2);
   key.position.set(3.2, 5, 3.6);
   key.castShadow = true;
   key.shadow.mapSize.set(1024, 1024);
@@ -40,13 +86,14 @@ function addLights(scene) {
   key.shadow.bias = -0.0004;
   scene.add(key);
 
-  const hemi = new THREE.HemisphereLight(0xfff1de, 0x3d3123, 0.75);
+  const hemi = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.85);
   scene.add(hemi);
 
-  const rim = new THREE.DirectionalLight(0xffe3bd, 0.7);
+  const rim = new THREE.DirectionalLight(0xffffff, 0.65);
   rim.position.set(-4.5, 2.2, -3.4);
   scene.add(rim);
 }
+
 
 function makeStage(radius, color) {
   const disc = new THREE.Mesh(
@@ -156,11 +203,31 @@ function createViewer(container, opts = {}) {
     const box2 = new THREE.Box3().setFromObject(object);
     object.position.y += -box2.min.y + 0.05;
 
+    /* keep materials that carry textures; clay only for bare meshes */
+    const texUrls = (opts.textures || []).filter(Boolean);
+    const firstTex = texUrls.length ? (texUrls[0].url || texUrls[0]) : null;
+    const texLoader = new THREE.TextureLoader();
+
     object.traverse((child) => {
-      if (child.isMesh) {
+      if (!child.isMesh) return;
+      child.castShadow = true;
+      child.receiveShadow = true;
+
+      const mats = Array.isArray(child.material) ? child.material : [child.material];
+      if (mats.some(hasMaps)) {
+        mats.forEach((m) => {
+          if (m && m.map) m.map.colorSpace = THREE.SRGBColorSpace;
+        });
+      } else if (firstTex) {
+        const tex = texLoader.load(firstTex);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        child.material = new THREE.MeshStandardMaterial({
+          map: tex,
+          roughness: 0.85,
+          metalness: 0.02,
+        });
+      } else {
         child.material = CLAY();
-        child.castShadow = true;
-        child.receiveShadow = true;
       }
     });
 
@@ -171,8 +238,13 @@ function createViewer(container, opts = {}) {
 
   if (opts.url) {
     try {
-      const loader = new FBXLoader();
-      loader.load(opts.url, placeObject, undefined, addFallback);
+      /* blob: URLs have no extension — pass the original file via opts.format */
+      const manager = textureManager(opts.textures);
+      const loader = loaderFor(isBlobUrl(opts.url) ? opts.format : opts.url, manager);
+      loader.load(opts.url, (object) => {
+        /* GLTFLoader returns { scene, ... } instead of a plain object */
+        placeObject(object.scene || object);
+      }, undefined, addFallback);
     } catch (err) {
       addFallback();
     }
@@ -208,7 +280,7 @@ function createViewer(container, opts = {}) {
     camera,
     onFrame() {
       if (!REDUCED) {
-        if (!dragging) autoYaw += 0.0028;
+        if (!dragging) autoYaw += 0.01;
         group.rotation.y = autoYaw + dragYaw;
       }
       if (!hasModel) group.rotation.y = performance.now() * 0.00018;
@@ -228,8 +300,8 @@ function initTurntable() {
   if (!container) return;
   if (caption) caption.textContent = "Loading…";
   createViewer(container, {
-    url: "assets/models/Noble_Isle.fbx",
-    label: "Noble Isle",
+    url: "assets/models/dggg/nobita.obj",
+    label: "Nobita",
     onCaption: (text) => {
       if (caption) caption.textContent = text;
     },
@@ -320,7 +392,7 @@ function buildStudy(container, index) {
     scene,
     camera,
     onFrame() {
-      if (!REDUCED) group.rotation.y += 0.0042;
+      if (!REDUCED) group.rotation.y += 0.01;
     },
   };
 

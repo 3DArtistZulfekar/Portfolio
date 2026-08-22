@@ -7,6 +7,16 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
+  /* escape everything that lands inside innerHTML — admin/data content is
+     untrusted and a stray "<" or quote must never break the layout */
+  const esc = (v) =>
+    String(v == null ? "" : v)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+
   /* ---------- data ---------- */
 
   async function loadData() {
@@ -28,16 +38,16 @@
   /* ---------- about / studio ---------- */
 
   function renderAbout(data) {
-    const p = data.personal_information;
+    const p = data.personal_information || {};
     const field = (key, value) => {
       const el = $(`[data-field="${key}"]`);
-      if (el) el.textContent = value;
+      if (el && value != null) el.textContent = value;
     };
 
     field("name", p.name);
     field("role", p.title);
     field("address", p.address);
-    field("languages", data.languages.join(" / "));
+    field("languages", (data.languages || []).join(" / "));
     field(
       "certification",
       data.certification
@@ -61,12 +71,12 @@
     const bench = $('[data-field="skills"]');
     if (!bench) return;
     bench.innerHTML = "";
-    skills.forEach((skill, i) => {
+    (skills || []).forEach((skill, i) => {
       const row = document.createElement("div");
       row.className = "tool-row reveal";
       row.innerHTML =
         '<span class="tool-idx">' + String(i + 1).padStart(2, "0") + "</span>" +
-        '<span class="tool-name">' + skill + "</span>";
+        '<span class="tool-name">' + esc(skill) + "</span>";
       bench.appendChild(row);
     });
   }
@@ -77,20 +87,20 @@
     const log = $('[data-field="experience"]');
     if (!log) return;
     log.innerHTML = "";
-    experiences.forEach((exp) => {
+    (experiences || []).forEach((exp) => {
       const job = document.createElement("article");
       job.className = "job reveal";
       const period = (exp.period || "").replace(" - ", " — ");
       const company = exp.company
-        ? '<p class="job-company">' + exp.company + "</p>"
+        ? '<p class="job-company">' + esc(exp.company) + "</p>"
         : "";
       job.innerHTML =
-        '<div class="job-period">' + period + "</div>" +
+        '<div class="job-period">' + esc(period) + "</div>" +
         '<div class="job-body">' +
-        "<h3 class=\"job-role\">" + exp.job_title + "</h3>" +
+        "<h3 class=\"job-role\">" + esc(exp.job_title) + "</h3>" +
         company +
         '<ul class="job-duty">' +
-        exp.responsibilities.map((r) => "<li>" + r + "</li>").join("") +
+        (exp.responsibilities || []).map((r) => "<li>" + esc(r) + "</li>").join("") +
         "</ul>" +
         "</div>";
       log.appendChild(job);
@@ -103,25 +113,28 @@
     const list = $('[data-field="projects"]');
     if (!list) return;
     list.innerHTML = "";
-    projects.forEach((project, i) => {
+    (projects || []).forEach((project) => {
       const card = document.createElement("article");
       card.className = "work-card reveal";
+      const links = project.links || [];
       card.innerHTML =
         '<figure class="work-fig">' +
-        '<canvas class="work-canvas" aria-hidden="true"></canvas>' +
+        (project.thumbnail
+          ? '<img class="work-thumb" src="' + esc(project.thumbnail) + '" alt="' + esc(project.title) + '" loading="lazy">'
+          : '<canvas class="work-canvas" aria-hidden="true"></canvas>') +
         "</figure>" +
         '<div class="work-info">' +
-        '<div class="work-meta">' + project.type.toUpperCase() + "</div>" +
-        "<h3 class=\"work-title\">" + project.title + "</h3>" +
-        '<p class="work-desc">' + project.description + "</p>" +
+        '<div class="work-meta">' + esc((project.type || "Project").toUpperCase()) + "</div>" +
+        "<h3 class=\"work-title\">" + esc(project.title) + "</h3>" +
+        '<p class="work-desc">' + esc(project.description) + "</p>" +
         '<div class="work-tech">' +
-        project.tech.map((t) => "<span class=\"chip\">" + t + "</span>").join("") +
+        (project.tech || []).map((t) => "<span class=\"chip\">" + esc(t) + "</span>").join("") +
         "</div>" +
-        project.links
+        links
           .map(
             (l) =>
-              '<a class="work-link" href="' + l.url + '" target="_blank" rel="noopener">' +
-              "View on " + l.name +
+              '<a class="work-link" href="' + esc(l.url) + '" target="_blank" rel="noopener">' +
+              "View on " + esc(l.name) +
               '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>' +
               "</a>"
           )
@@ -142,17 +155,17 @@
       card.className = "live-card reveal";
       card.innerHTML =
         '<div class="live-meta">' +
-        (project.platform ? "<span>" + project.platform + "</span>" : "") +
-        "<span>" + project.type + "</span>" +
+        (project.platform ? "<span>" + esc(project.platform) + "</span>" : "") +
+        "<span>" + esc(project.type || "Live") + "</span>" +
         "</div>" +
-        "<h3 class=\"live-title\">" + project.title + "</h3>" +
-        '<p class="live-desc">' + project.description + "</p>" +
+        "<h3 class=\"live-title\">" + esc(project.title) + "</h3>" +
+        '<p class="live-desc">' + esc(project.description) + "</p>" +
         (project.technologies && project.technologies.length
           ? '<div class="work-tech">' +
-            project.technologies.map((t) => "<span class=\"chip\">" + t + "</span>").join("") +
+            project.technologies.map((t) => "<span class=\"chip\">" + esc(t) + "</span>").join("") +
             "</div>"
           : "") +
-        '<a class="live-link" href="' + project.url + '" target="_blank" rel="noopener">' +
+        '<a class="live-link" href="' + esc(project.url) + '" target="_blank" rel="noopener">' +
         "Open live" +
         '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>' +
         "</a>";
@@ -163,20 +176,20 @@
   /* ---------- contact ---------- */
 
   function renderContact(data) {
-    const p = data.personal_information;
+    const p = data.personal_information || {};
     const field = (key, value, href) => {
       const el = $(`[data-field="${key}"]`);
-      if (el) {
-        el.textContent = value;
-        el.href = href || value;
-      }
+      if (!el || value == null) return;
+      el.textContent = value;
+      el.href = href || value;
     };
     const linkedin = (data.social_media || []).find((s) => /linkedin/i.test(s.platform));
-    field("phone", p.phone, "tel:" + p.phone.replace(/[^+\d]/g, ""));
-    field("email", p.email, "mailto:" + p.email);
-    field("artstation", "ArtStation ↗", p.portfolio && p.portfolio.url);
-    field("linkedin", "LinkedIn ↗", linkedin && linkedin.url);
-    field("resume", "Resume (PDF)", p.resume);
+    if (p.phone) field("phone", p.phone, "tel:" + String(p.phone).replace(/[^+\d]/g, ""));
+    if (p.email) field("email", p.email, "mailto:" + p.email);
+    if (p.portfolio && p.portfolio.url) field("artstation", "ArtStation ↗", p.portfolio.url);
+    const linkedinUrl = linkedin ? linkedin.url : "https://www.linkedin.com/in/zulfekar-ahmad-2172361b8/";
+    field("linkedin", "LinkedIn ↗", linkedinUrl);
+    if (p.resume) field("resume", "Resume (PDF)", p.resume);
   }
 
   /* ---------- scroll reveals ---------- */
@@ -412,6 +425,34 @@
 
   /* ---------- nav state ---------- */
 
+  function initNavToggle() {
+    const nav = $(".nav");
+    const btn = $("[data-nav-toggle]");
+    if (!nav || !btn) return;
+    const links = $(".nav-links");
+
+    const setOpen = (open) => {
+      nav.classList.toggle("nav-open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    };
+
+    btn.addEventListener("click", () =>
+      setOpen(!nav.classList.contains("nav-open"))
+    );
+    if (links) {
+      links.addEventListener("click", (e) => {
+        if (e.target.closest("a")) setOpen(false);
+      });
+    }
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") setOpen(false);
+    });
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 820) setOpen(false);
+    });
+  }
+
   function initNavState() {
     const links = $$(".nav-links a");
     const map = {};
@@ -443,6 +484,7 @@
     }
     initReveals();
     initTheme();
+    initNavToggle();
     initTextReveals();
     initHeroEntrance();
     initHeroScroll();

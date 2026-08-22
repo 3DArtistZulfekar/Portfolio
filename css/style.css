@@ -69,6 +69,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  overflow-wrap: break-word;
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
@@ -185,13 +186,60 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
 }
 
 .nav-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
 
+.nav-logo {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
 .nav-brand:hover {
   text-decoration: none;
+}
+
+.nav-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: none;
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.nav-toggle:hover {
+  background: var(--card);
+}
+
+.nav-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+.nav-toggle .icon-close {
+  display: none;
+}
+
+.nav.nav-open .nav-toggle .icon-menu {
+  display: none;
+}
+
+.nav.nav-open .nav-toggle .icon-close {
+  display: block;
 }
 
 .nav-links {
@@ -239,10 +287,12 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
 }
 
 .hero-role {
-  margin-top: 0.75rem;
-  font-size: 1.12rem;
-  font-weight: 500;
-  color: var(--muted);
+  margin-top: 0.85rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--oxide);
 }
 
 .hero-bio {
@@ -267,7 +317,16 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
   padding: 0.7rem 1.4rem;
   border-radius: 8px;
   border: 1px solid transparent;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease,
+    transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
 }
 
 .btn svg {
@@ -277,11 +336,13 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
 
 .btn-primary {
   background: var(--amber);
-  color: var(--ink);
+  color: #241d12;
+  box-shadow: 0 1px 2px var(--shadow);
 }
 
 .btn-primary:hover {
   background: var(--amber-hi);
+  box-shadow: 0 6px 18px -6px var(--amber);
   text-decoration: none;
 }
 
@@ -303,9 +364,13 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
   border: 1px solid var(--line-strong);
   border-radius: 12px;
   padding: 12px;
+  box-shadow:
+    0 1px 2px var(--shadow),
+    0 24px 48px -28px var(--shadow);
 }
 
 .stage-canvas {
+  position: relative;
   width: 100%;
   height: clamp(280px, 38vw, 420px);
   border-radius: 8px;
@@ -341,6 +406,16 @@ main {
   font-weight: 700;
   letter-spacing: -0.02em;
   position: relative;
+}
+
+/* small numbered eyebrow above each section title */
+.sec-index {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: var(--oxide);
 }
 
 .sec-rule {
@@ -390,12 +465,29 @@ main {
   border: 1px solid var(--line-strong);
   border-radius: 12px;
   overflow: hidden;
-  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 
-.work-card:hover {
-  box-shadow: 0 14px 32px var(--shadow);
-  transform: translateY(-2px);
+/* hover affordance tuned per theme: soft depth in light mode, an amber
+   edge-glow in dark mode where drop shadows disappear against the ground */
+.work-card:hover,
+.live-card:hover,
+.model-card:hover {
+  border-color: var(--amber);
+  box-shadow:
+    0 14px 32px var(--shadow),
+    0 0 0 1px var(--amber);
+  transform: translateY(-3px);
+}
+
+html[data-theme="dark"] .work-card:hover,
+html[data-theme="dark"] .live-card:hover,
+html[data-theme="dark"] .model-card:hover {
+  background: #2a251c;
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.55),
+    0 0 24px -6px rgba(224, 164, 88, 0.28),
+    0 0 0 1px var(--amber);
 }
 
 .work-fig {
@@ -403,10 +495,15 @@ main {
   border-bottom: 1px solid var(--line);
 }
 
-.work-canvas {
+.work-canvas,
+.work-thumb {
   display: block;
   width: 100%;
   height: 200px;
+}
+
+.work-thumb {
+  object-fit: cover;
 }
 
 .work-info {
@@ -482,11 +579,13 @@ main {
   transform: translateX(3px);
 }
 
-.work-canvas {
+.work-canvas,
+.work-thumb {
   transition: transform 0.5s ease;
 }
 
-.work-card:hover .work-canvas {
+.work-card:hover .work-canvas,
+.work-card:hover .work-thumb {
   transform: scale(1.04);
 }
 
@@ -505,12 +604,7 @@ main {
   border: 1px solid var(--line-strong);
   border-radius: 12px;
   padding: 1.35rem 1.4rem;
-  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.live-card:hover {
-  box-shadow: 0 14px 32px var(--shadow);
-  transform: translateY(-2px);
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .live-meta {
@@ -581,12 +675,7 @@ main {
   border: 1px solid var(--line-strong);
   border-radius: 12px;
   overflow: hidden;
-  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.model-card:hover {
-  box-shadow: 0 14px 32px var(--shadow);
-  transform: translateY(-2px);
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 
 .model-fig {
@@ -594,11 +683,31 @@ main {
   border-bottom: 1px solid var(--line);
 }
 
-.model-canvas {
+.model-canvas,
+.model-thumb {
   display: block;
   width: 100%;
   height: 220px;
   transition: transform 0.5s ease;
+}
+
+.model-thumb {
+  object-fit: cover;
+}
+
+.model-fig-none {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 220px;
+}
+
+.model-no-thumb {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  opacity: 0.7;
 }
 
 .model-canvas canvas {
@@ -607,7 +716,8 @@ main {
   height: 100%;
 }
 
-.model-card:hover .model-canvas {
+.model-card:hover .model-canvas,
+.model-card:hover .model-thumb {
   transform: scale(1.04);
 }
 
@@ -701,15 +811,20 @@ main {
 }
 
 .model-stage {
+  position: relative;
   margin-top: 1.5rem;
   background: var(--card);
   border: 1px solid var(--line-strong);
   border-radius: 12px;
   padding: 12px;
-  transition: background-color 0.25s ease, border-color 0.25s ease;
+  box-shadow:
+    0 1px 2px var(--shadow),
+    0 24px 48px -28px var(--shadow);
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .model-stage-canvas {
+  position: relative;
   width: 100%;
   height: clamp(360px, 62vh, 660px);
   border-radius: 8px;
@@ -727,6 +842,83 @@ main {
   padding: 0 4px;
   font-size: 0.85rem;
   color: var(--muted);
+}
+
+/* ---------- stage tools (fullscreen / download) ---------- */
+
+/* model loading spinner — sits over the canvas until geometry + textures land */
+.stage-loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.stage-loader::after {
+  content: "";
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 3px solid rgba(60, 54, 44, 0.16);
+  border-top-color: rgba(60, 54, 44, 0.62);
+  animation: stage-spin 0.8s linear infinite;
+}
+
+@keyframes stage-spin {
+  to { transform: rotate(360deg); }
+}
+
+.stage-tools {
+  position: absolute;
+  bottom: 44px;
+  right: 20px;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 5;
+}
+
+.stage-tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  background: var(--nav-bg);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.stage-tool:hover {
+  background: var(--card);
+  color: var(--oxide);
+}
+
+.stage-tool svg {
+  width: 16px;
+  height: 16px;
+}
+
+.model-stage:fullscreen {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  border: none;
+  border-radius: 0;
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+.model-stage:fullscreen .model-stage-canvas {
+  flex: 1;
+  min-height: 0;
+  height: auto;
 }
 
 .model-view-desc {
@@ -914,6 +1106,12 @@ main {
   aspect-ratio: 4 / 5;
   object-fit: cover;
   filter: saturate(0.92) contrast(1.02);
+  transition: filter 0.25s ease;
+}
+
+/* portrait follows the theme — dims and warms in dark mode */
+html[data-theme="dark"] .portrait img {
+  filter: saturate(0.85) contrast(1.05) brightness(0.78) sepia(0.08);
 }
 
 .about-copy .lead {
@@ -1104,6 +1302,18 @@ main {
   color: var(--muted);
 }
 
+.foot-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.foot .nav-logo {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+}
+
 /* ---------- Error / noscript ---------- */
 
 .noscript-note {
@@ -1161,6 +1371,50 @@ main {
 }
 
 @media (max-width: 820px) {
+  /* header collapses into a hamburger dropdown */
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: var(--nav-h);
+    left: 0;
+    right: 0;
+    z-index: 99;
+    flex-direction: column;
+    gap: 0;
+    max-height: calc(100dvh - var(--nav-h));
+    overflow-y: auto;
+    padding: 0.4rem clamp(1.25rem, 4vw, 2.5rem) 1rem;
+    background: var(--nav-bg);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line-strong);
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  }
+
+  .nav.nav-open .nav-links {
+    opacity: 1;
+    transform: none;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .nav-links a {
+    font-size: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-links a:last-child {
+    border-bottom: none;
+  }
+
   .hero {
     grid-template-columns: 1fr;
     padding-top: calc(var(--nav-h) + 2rem);
@@ -1180,6 +1434,10 @@ main {
 }
 
 @media (max-width: 600px) {
+  .container {
+    padding: 0 1.1rem;
+  }
+
   .nav {
     gap: 0.75rem;
     padding: 0 1rem;
@@ -1190,46 +1448,55 @@ main {
   }
 
   .nav-brand {
-    font-size: 0.9rem;
+    font-size: 0.92rem;
   }
 
-  .nav-links {
-    gap: 0.9rem;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-
-  .nav-links::-webkit-scrollbar {
-    display: none;
-  }
-
-  .nav-links a {
+  .nav .btn {
+    padding: 0.55rem 0.85rem;
     font-size: 0.85rem;
-    white-space: nowrap;
   }
 
-  .work-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .live-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .model-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .admin-grid {
-    grid-template-columns: 1fr;
-  }
-
+  .work-grid,
+  .live-grid,
+  .model-grid,
+  .admin-grid,
   .tool-list {
     grid-template-columns: 1fr;
   }
 
   .fact-row {
     grid-template-columns: 6.5rem 1fr;
+  }
+
+  .foot {
+    flex-direction: column;
+    gap: 0.3rem;
+    text-align: center;
+  }
+
+  .model-stage-canvas {
+    height: clamp(280px, 55vh, 420px);
+  }
+
+  .admin-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+  }
+
+  .admin-form-actions {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 400px) {
+  .hero-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .contact-email {
+    font-size: 1.15rem;
   }
 }
 

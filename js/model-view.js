@@ -1,5 +1,5 @@
 /* model viewer page — full-view turntable for one model (model.html?i=0) */
-import { getModelsData, resolveModelFile } from "./model-data.js";
+import { getModelsData, resolveModelFile, resolveModelTextures } from "./model-data.js";
 
 (async () => {
   const canvas = document.getElementById("model-scene");
@@ -34,12 +34,54 @@ import { getModelsData, resolveModelFile } from "./model-data.js";
 
   if (canvas) {
     const url = await resolveModelFile(model);
+    const textures = await resolveModelTextures(model);
     window.zulfCreateViewer(canvas, {
       url,
+      format: model.file,
+      textures,
       label: model.title,
       onCaption: (text) => {
         if (caption) caption.textContent = text;
       },
     });
+
+    /* download the model file */
+    const dl = document.getElementById("btn-download");
+    if (dl) {
+      if (url) {
+        dl.href = url;
+        dl.setAttribute(
+          "download",
+          String(model.file || "model")
+            .split("/")
+            .pop()
+            .split("?")[0] || "model"
+        );
+      } else {
+        dl.hidden = true;
+      }
+    }
+
+    /* full screen toggle */
+    const fsBtn = document.getElementById("btn-fullscreen");
+    const stage = document.querySelector(".model-stage");
+    if (fsBtn && stage) {
+      if (!stage.requestFullscreen) {
+        fsBtn.hidden = true;
+      } else {
+        fsBtn.addEventListener("click", () => {
+          if (document.fullscreenElement) {
+            document.exitFullscreen();
+          } else {
+            stage.requestFullscreen();
+          }
+        });
+        document.addEventListener("fullscreenchange", () => {
+          const active = document.fullscreenElement === stage;
+          fsBtn.setAttribute("aria-label", active ? "Exit full screen" : "Full screen");
+          window.dispatchEvent(new Event("resize"));
+        });
+      }
+    }
   }
 })();
