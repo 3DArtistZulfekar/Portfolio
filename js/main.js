@@ -7,6 +7,30 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
+  /* on refresh always start at top — prevent browser scroll restoration */
+  try {
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  } catch (e) {}
+
+  function isReloadNavigation() {
+    try {
+      const nav = performance.getEntriesByType("navigation")[0];
+      if (nav) return nav.type === "reload";
+      if (performance.navigation) return performance.navigation.type === 1;
+    } catch (e) {}
+    return false;
+  }
+
+  // immediate hash cleanup on reload: strip #contact (or any hash) so refresh == first open
+  try {
+    if (isReloadNavigation() && location.hash) {
+      history.replaceState(null, "", location.pathname + location.search);
+    }
+    if (isReloadNavigation()) {
+      window.scrollTo(0, 0);
+    }
+  } catch (e) {}
+
   /* escape everything that lands inside innerHTML — admin/data content is
      untrusted and a stray "<" or quote must never break the layout */
   const esc = (v) =>
@@ -521,6 +545,58 @@
     $$("main section").forEach((s) => io.observe(s));
   }
 
+  /* ---------- scroll to top ---------- */
+
+  function initScrollTop() {
+    let btn = document.getElementById("scroll-top");
+    if (!btn) {
+      btn = document.createElement("button");
+      btn.id = "scroll-top";
+      btn.className = "scroll-top";
+      btn.type = "button";
+      btn.setAttribute("aria-label", "Back to top");
+      btn.innerHTML =
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+      document.body.appendChild(btn);
+    }
+    const toggle = () => {
+      if (window.scrollY > 400) btn.classList.add("visible");
+      else btn.classList.remove("visible");
+    };
+    window.addEventListener("scroll", toggle, { passive: true });
+    toggle();
+    btn.addEventListener("click", () =>
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    );
+  }
+
+  function initScrollRestoration() {
+    const isReload = isReloadNavigation();
+    // on reload: remove hash (e.g. #contact) and force top — same as first open
+    if (isReload && location.hash) {
+      try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+    }
+    if (isReload) {
+      window.scrollTo(0, 0);
+      requestAnimationFrame(() => window.scrollTo(0, 0));
+      setTimeout(() => window.scrollTo(0, 0), 0);
+    } else if (!location.hash) {
+      // normal load without hash — ensure top (handles browser restore)
+      window.scrollTo(0, 0);
+      requestAnimationFrame(() => window.scrollTo(0, 0));
+      setTimeout(() => window.scrollTo(0, 0), 0);
+    }
+    // bfcache restore (back/forward) — if persisted and it's a reload-like restore, clear hash
+    window.addEventListener("pageshow", (e) => {
+      if (!e.persisted) return;
+      const reload = isReloadNavigation();
+      if (reload && location.hash) {
+        try { history.replaceState(null, "", location.pathname + location.search); } catch (err) {}
+      }
+      if (reload || !location.hash) window.scrollTo(0, 0);
+    });
+  }
+
   /* ---------- boot ---------- */
 
   async function boot() {
@@ -537,6 +613,8 @@
     initHeroScroll();
     initNavState();
     initSectionFX();
+    initScrollTop();
+    initScrollRestoration();
 
     try {
       const data = await loadData();
@@ -549,10 +627,9 @@
       initReveals();
       initSectionFX();
       if (window.initStudies) window.initStudies();
-      // Cross-page hash (e.g. models.html -> index.html#expertise) scrolls
-      // before async data fills sections, so offset is wrong. Re-scroll
-      // after render. Supports old aliases #work/#live.
-      if (location.hash) {
+      // Cross-page hash (e.g. models.html -> index.html#expertise) — only when
+      // not a reload. On reload we already stripped the hash and forced top.
+      if (location.hash && !isReloadNavigation()) {
         const hash = resolveHash(location.hash);
         const target = document.querySelector(hash) || document.querySelector(location.hash);
         if (target) {

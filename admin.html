@@ -24,6 +24,23 @@
       } catch (e) {}
     })();
   </script>
+  <script>
+    (function () {
+      try {
+        if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+        var isReload = false;
+        try {
+          var nav = performance.getEntriesByType("navigation")[0];
+          if (nav) isReload = nav.type === "reload";
+          else if (performance.navigation) isReload = performance.navigation.type === 1;
+        } catch (e2) {}
+        if (isReload && location.hash) {
+          history.replaceState(null, "", location.pathname + location.search);
+        }
+        if (isReload) window.scrollTo(0, 0);
+      } catch (e) {}
+    })();
+  </script>
   <script type="importmap">
   {
     "imports": {
@@ -119,6 +136,10 @@
   <noscript>
     <p class="noscript-note">This admin page needs JavaScript.</p>
   </noscript>
+
+  <button id="scroll-top" class="scroll-top" type="button" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>

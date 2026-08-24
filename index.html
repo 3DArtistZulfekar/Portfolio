@@ -42,6 +42,23 @@
       } catch (e) {}
     })();
   </script>
+  <script>
+    (function () {
+      try {
+        if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+        var isReload = false;
+        try {
+          var nav = performance.getEntriesByType("navigation")[0];
+          if (nav) isReload = nav.type === "reload";
+          else if (performance.navigation) isReload = performance.navigation.type === 1;
+        } catch (e2) {}
+        if (isReload && location.hash) {
+          history.replaceState(null, "", location.pathname + location.search);
+        }
+        if (isReload) window.scrollTo(0, 0);
+      } catch (e) {}
+    })();
+  </script>
   <script type="importmap">
   {
     "imports": {
@@ -54,7 +71,7 @@
 <body>
 
   <header class="nav" id="top">
-    <a class="nav-brand" href="#top"><img class="nav-logo" src="assets/website/logo.png" alt="" width="26" height="26">Zulfekar Ahmad</a>
+    <a class="nav-brand" href="index.html"><img class="nav-logo" src="assets/website/logo.png" alt="" width="26" height="26">Zulfekar Ahmad</a>
     <div class="nav-right">
       <nav class="nav-links" id="nav-links" aria-label="Primary">
         <a href="#expertise">Expertise</a>
@@ -187,9 +204,13 @@
   </main>
 
   <footer class="foot">
-    <span class="foot-brand"><img class="nav-logo" src="assets/website/logo.png" alt="" width="20" height="20">© <span id="copyright-year">2026</span> Zulfekar Ahmad</span>
+    <a class="foot-brand" href="index.html"><img class="nav-logo" src="assets/website/logo.png" alt="" width="20" height="20">© <span id="copyright-year">2026</span> Zulfekar Ahmad</a>
     <span>3D Artist &amp; Model Developer</span>
   </footer>
+
+  <button id="scroll-top" class="scroll-top" type="button" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
 
   <noscript>
     <p class="noscript-note">This portfolio renders its content from data/personal.json. Enable JavaScript to view it.</p>
