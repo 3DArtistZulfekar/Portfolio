@@ -1268,9 +1268,18 @@ html[data-theme="dark"] .portrait img {
 }
 
 .contact-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: 0.95rem;
   font-weight: 500;
   color: var(--muted);
+}
+
+.contact-links a svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
 }
 
 .contact-links a:hover {

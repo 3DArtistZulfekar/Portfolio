@@ -17,6 +17,10 @@
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;");
 
+  // Alias for renamed sections — supports old bookmarks #work/#live
+  const HASH_ALIAS = { "#work": "#expertise", "#live": "#production" };
+  const resolveHash = (h) => HASH_ALIAS[h] || h;
+
   /* ---------- data ---------- */
 
   async function loadData() {
@@ -442,7 +446,40 @@
     );
     if (links) {
       links.addEventListener("click", (e) => {
-        if (e.target.closest("a")) setOpen(false);
+        const a = e.target.closest("a");
+        if (!a) return;
+        const href = a.getAttribute("href") || "";
+        // Same-page hash (e.g. "#expertise" on index.html) — handle smooth scroll
+        if (href.startsWith("#")) {
+          const resolved = resolveHash(href);
+          const target = document.querySelector(resolved) || document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            requestAnimationFrame(() => setOpen(false));
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+            history.pushState(null, "", resolved);
+            return;
+          }
+        }
+        // Cross-page hash like "index.html#expertise" from models.html — if the
+        // hash target exists on current page (already on index.html), treat as
+        // same-page to avoid reload.
+        if (href.includes("#")) {
+          const hash = href.slice(href.indexOf("#"));
+          const resolved = resolveHash(hash);
+          const target = document.querySelector(resolved) || document.querySelector(hash);
+          const isIndex = /(^|\/)index\.html$/.test(location.pathname) || location.pathname === "/" || location.pathname.endsWith("/Portfolio/") || location.pathname.endsWith("/Portfolio/index.html");
+          if (target && isIndex && href.includes("index.html")) {
+            e.preventDefault();
+            requestAnimationFrame(() => setOpen(false));
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+            history.pushState(null, "", resolved);
+            return;
+          }
+        }
+        // Default: cross-page nav — defer close so mobile pointer-events
+        // transition doesn't cancel navigation (double-tap bug).
+        requestAnimationFrame(() => setOpen(false));
       });
     }
     window.addEventListener("keydown", (e) => {
@@ -457,7 +494,15 @@
     const links = $$(".nav-links a");
     const map = {};
     links.forEach((a) => {
-      map[a.getAttribute("href").slice(1)] = a;
+      const href = a.getAttribute("href") || "";
+      const hash = href.includes("#") ? href.slice(href.indexOf("#")) : href;
+      if (!hash) return;
+      const resolved = resolveHash(hash);
+      map[hash] = a;
+      if (resolved !== hash) map[resolved] = a;
+      // also map alias keys for active state when observing old id
+      const rev = Object.keys(HASH_ALIAS).find((k) => HASH_ALIAS[k] === hash);
+      if (rev) map[rev] = a;
     });
     if (!("IntersectionObserver" in window)) return;
     const io = new IntersectionObserver(
@@ -465,7 +510,9 @@
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
           links.forEach((a) => a.classList.remove("active"));
-          const link = map[entry.target.id];
+          const direct = map["#" + entry.target.id];
+          const aliased = map[resolveHash("#" + entry.target.id)];
+          const link = direct || aliased;
           if (link) link.classList.add("active");
         });
       },
@@ -502,6 +549,18 @@
       initReveals();
       initSectionFX();
       if (window.initStudies) window.initStudies();
+      // Cross-page hash (e.g. models.html -> index.html#expertise) scrolls
+      // before async data fills sections, so offset is wrong. Re-scroll
+      // after render. Supports old aliases #work/#live.
+      if (location.hash) {
+        const hash = resolveHash(location.hash);
+        const target = document.querySelector(hash) || document.querySelector(location.hash);
+        if (target) {
+          requestAnimationFrame(() => {
+            setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
+          });
+        }
+      }
     } catch (err) {
       console.error("Failed to load portfolio data:", err);
       renderError();
