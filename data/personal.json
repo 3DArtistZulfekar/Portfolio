@@ -47,8 +47,11 @@
       "company": "Digitize Solutions",
       "period": "Nov 2023 - Present",
       "responsibilities": [
-        "Created 3D models and converted CAD models into optimized 3D assets, integrating them into scenes for a 3D player configurator to enable interactive product visualization and sales.",
-        "Managed and delivered client projects within tight timelines, ensuring high-quality outcomes and fast client approvals with minimal feedback."
+        "Created 3D models and converted CAD data into optimized assets for web-based 3D product configurators and interactive visualization.",
+        "Worked on modeling, optimization, UVs, materials, and scene setup to ensure smooth real-time performance.",
+        "Integrated 3D assets into configurator scenes, enabling customers to interactively visualize and customize products.",
+        "Managed multiple client projects under tight deadlines, delivering high-quality work with minimal feedback and fast client approvals.",
+        
       ]
     },
     {
@@ -56,8 +59,14 @@
       "company": "Amazon",
       "period": "Aug 2022 - Oct 2023",
       "responsibilities": [
-       "Specialized in modelling and texturing of real-time, low-poly assets for use in Amazon AR.",
-        "Created and refined models using scan data for Amazon AR."
+       "Created and optimized low-poly 3D assets for real-time Amazon AR experiences.",
+        "Worked with scan data to build accurate, production-ready 3D models.",
+        "Handled modeling, retopology, UV mapping, and texturing for AR-ready assets.",
+        "Optimized geometry and textures while maintaining visual quality and real-time performance.",
+        "Prepared and refined assets according to project requirements and quality standards.",
+        
+        
+        
       ]
     },
     {
@@ -65,8 +74,12 @@
       "company": "BYJU'S The Learning App",
       "period": "Nov 2021 - Jul 2022",
       "responsibilities": [
-         "Worked in a challenging environment and specialized in modelling and texturing low-poly environments from 2D concept art.",
-        "Created various environments for educational animated videos."
+         "Worked in a fast-paced and challenging environment, delivering high-quality 3D assets within tight deadlines.",
+        "Created diverse 3D environments, props, and assets for educational animated videos.",
+        "Translated 2D concepts into visually appealing 3D scenes while maintaining the required style and quality.",
+        "Worked closely with the creative team to deliver assets within project requirements and timelines.",
+        
+        
       ]
     }
   ],
