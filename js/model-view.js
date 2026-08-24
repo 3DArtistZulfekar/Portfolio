@@ -1,5 +1,5 @@
 /* model viewer page — full-view turntable for one model (model.html?i=0) */
-import { getModelsData, resolveModelFile, resolveModelTextures } from "./model-data.js";
+import { getModelsData, resolveModelFile, resolveModelTextures, resolveModelThumb } from "./model-data.js";
 
 (async () => {
   const canvas = document.getElementById("model-scene");
@@ -31,6 +31,37 @@ import { getModelsData, resolveModelFile, resolveModelTextures } from "./model-d
   if (type) type.textContent = (model.type || "3D model").toUpperCase();
   if (desc) desc.textContent = model.description || "";
   document.title = model.title + " — Zulfekar Ahmad";
+
+  // Update OG/Twitter meta dynamically so JS-aware crawlers / in-app browsers show model-specific preview.
+  // NOTE: WhatsApp/Facebook crawlers do NOT execute JS, so they will still see the static tags in model.html.
+  // For per-model previews on those platforms you need server-side rendering or a Cloudflare Worker / Netlify Function
+  // that returns model-specific meta based on ?i=.
+  try {
+    const SITE_BASE = "https://3dartistzulfekar.github.io/Portfolio";
+    const pageUrl = SITE_BASE + "/model.html?i=" + idx;
+    const descText = model.description || "Zulfekar Ahmad — 3D assets in full view.";
+    const setMeta = (sel, val) => {
+      const el = document.querySelector(sel);
+      if (el) el.setAttribute("content", val);
+    };
+    setMeta('meta[property="og:title"]', model.title + " — Zulfekar Ahmad");
+    setMeta('meta[property="og:description"]', descText);
+    setMeta('meta[property="og:url"]', pageUrl);
+    setMeta('meta[name="twitter:title"]', model.title + " — Zulfekar Ahmad");
+    setMeta('meta[name="twitter:description"]', descText);
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) canonical.setAttribute("href", pageUrl);
+    // Use model thumbnail as share image if available, else keep default og-image
+    if (model.thumbnail) {
+      const thumbUrl = await resolveModelThumb(model);
+      if (thumbUrl) {
+        const absThumb = thumbUrl.startsWith("http") ? thumbUrl : new URL(thumbUrl, SITE_BASE + "/").href;
+        setMeta('meta[property="og:image"]', absThumb);
+        setMeta('meta[property="og:image:secure_url"]', absThumb);
+        setMeta('meta[name="twitter:image"]', absThumb);
+      }
+    }
+  } catch (_) {}
 
   if (canvas) {
     const url = await resolveModelFile(model);
