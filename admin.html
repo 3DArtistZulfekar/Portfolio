@@ -9,6 +9,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/website/favicon/favicon.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="assets/website/favicon/favicon.svg">
+  <link rel="icon" type="image/png" sizes="96x96" href="assets/website/favicon/favicon-96x96.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/website/favicon/apple-touch-icon.png">
+  <link rel="manifest" href="assets/website/favicon/site.webmanifest">
   <link rel="stylesheet" href="css/style.css">
   <script>
     (function () {
@@ -19,11 +24,36 @@
       } catch (e) {}
     })();
   </script>
+  <script>
+    (function () {
+      try {
+        if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+        var isReload = false;
+        try {
+          var nav = performance.getEntriesByType("navigation")[0];
+          if (nav) isReload = nav.type === "reload";
+          else if (performance.navigation) isReload = performance.navigation.type === 1;
+        } catch (e2) {}
+        if (isReload && location.hash) {
+          history.replaceState(null, "", location.pathname + location.search);
+        }
+        if (isReload) window.scrollTo(0, 0);
+      } catch (e) {}
+    })();
+  </script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
 </head>
 <body>
 
   <header class="nav" id="top">
-    <a class="nav-brand" href="index.html">Zulfekar Ahmad</a>
+    <a class="nav-brand" href="index.html"><img class="nav-logo" src="assets/website/logo.png" alt="" width="26" height="26">Zulfekar Ahmad</a>
     <div class="nav-right">
       <a class="btn btn-secondary" href="models.html">Back to models</a>
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode">
@@ -45,6 +75,9 @@
           </label>
           <label>Password
             <input type="password" id="login-pass" autocomplete="current-password">
+          </label>
+          <label>GitHub Token
+            <input type="text" id="github-token" placeholder="ghp_... your token" autocomplete="off">
           </label>
           <p class="admin-error" id="login-error" hidden>Incorrect credentials.</p>
           <button class="btn btn-primary" type="submit">Sign in</button>
@@ -80,6 +113,14 @@
             <input type="file" id="f-upload" accept=".fbx,.glb,.gltf,.obj" required>
           </label>
           <p class="admin-note" id="file-path-note">Upload a file — the path is filled in automatically.</p>
+          <label>Thumbnail image (.jpg / .png / .webp / .gif)
+            <input type="file" id="f-thumb" accept=".jpg,.jpeg,.png,.webp,.gif">
+          </label>
+          <p class="admin-note" id="thumb-path-note">Optional — upload a thumbnail to show on the Models page. If none, "No thumbnail" is shown.</p>
+          <label>Textures (.jpg / .png / .webp — select multiple)
+            <input type="file" id="f-textures" accept=".jpg,.jpeg,.png,.webp,.gif" multiple>
+          </label>
+          <p class="admin-note" id="texture-path-note">Optional — texture images are matched to the model by filename and stored in the model's own folder.</p>
           <div class="admin-form-actions">
             <button class="btn btn-primary" type="submit" id="form-submit">Add model</button>
             <button class="btn btn-secondary" type="button" id="form-cancel" hidden>Cancel edit</button>
@@ -95,6 +136,10 @@
   <noscript>
     <p class="noscript-note">This admin page needs JavaScript.</p>
   </noscript>
+
+  <button id="scroll-top" class="scroll-top" type="button" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>

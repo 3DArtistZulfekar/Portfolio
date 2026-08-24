@@ -7,6 +7,44 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
+  /* on refresh always start at top — prevent browser scroll restoration */
+  try {
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  } catch (e) {}
+
+  function isReloadNavigation() {
+    try {
+      const nav = performance.getEntriesByType("navigation")[0];
+      if (nav) return nav.type === "reload";
+      if (performance.navigation) return performance.navigation.type === 1;
+    } catch (e) {}
+    return false;
+  }
+
+  // immediate hash cleanup on reload: strip #contact (or any hash) so refresh == first open
+  try {
+    if (isReloadNavigation() && location.hash) {
+      history.replaceState(null, "", location.pathname + location.search);
+    }
+    if (isReloadNavigation()) {
+      window.scrollTo(0, 0);
+    }
+  } catch (e) {}
+
+  /* escape everything that lands inside innerHTML — admin/data content is
+     untrusted and a stray "<" or quote must never break the layout */
+  const esc = (v) =>
+    String(v == null ? "" : v)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+
+  // Alias for renamed sections — supports old bookmarks #work/#live
+  const HASH_ALIAS = { "#work": "#expertise", "#live": "#production" };
+  const resolveHash = (h) => HASH_ALIAS[h] || h;
+
   /* ---------- data ---------- */
 
   async function loadData() {
@@ -28,16 +66,16 @@
   /* ---------- about / studio ---------- */
 
   function renderAbout(data) {
-    const p = data.personal_information;
+    const p = data.personal_information || {};
     const field = (key, value) => {
       const el = $(`[data-field="${key}"]`);
-      if (el) el.textContent = value;
+      if (el && value != null) el.textContent = value;
     };
 
     field("name", p.name);
     field("role", p.title);
     field("address", p.address);
-    field("languages", data.languages.join(" / "));
+    field("languages", (data.languages || []).join(" / "));
     field(
       "certification",
       data.certification
@@ -61,12 +99,12 @@
     const bench = $('[data-field="skills"]');
     if (!bench) return;
     bench.innerHTML = "";
-    skills.forEach((skill, i) => {
+    (skills || []).forEach((skill, i) => {
       const row = document.createElement("div");
       row.className = "tool-row reveal";
       row.innerHTML =
         '<span class="tool-idx">' + String(i + 1).padStart(2, "0") + "</span>" +
-        '<span class="tool-name">' + skill + "</span>";
+        '<span class="tool-name">' + esc(skill) + "</span>";
       bench.appendChild(row);
     });
   }
@@ -77,20 +115,20 @@
     const log = $('[data-field="experience"]');
     if (!log) return;
     log.innerHTML = "";
-    experiences.forEach((exp) => {
+    (experiences || []).forEach((exp) => {
       const job = document.createElement("article");
       job.className = "job reveal";
       const period = (exp.period || "").replace(" - ", " — ");
       const company = exp.company
-        ? '<p class="job-company">' + exp.company + "</p>"
+        ? '<p class="job-company">' + esc(exp.company) + "</p>"
         : "";
       job.innerHTML =
-        '<div class="job-period">' + period + "</div>" +
+        '<div class="job-period">' + esc(period) + "</div>" +
         '<div class="job-body">' +
-        "<h3 class=\"job-role\">" + exp.job_title + "</h3>" +
+        "<h3 class=\"job-role\">" + esc(exp.job_title) + "</h3>" +
         company +
         '<ul class="job-duty">' +
-        exp.responsibilities.map((r) => "<li>" + r + "</li>").join("") +
+        (exp.responsibilities || []).map((r) => "<li>" + esc(r) + "</li>").join("") +
         "</ul>" +
         "</div>";
       log.appendChild(job);
@@ -103,25 +141,28 @@
     const list = $('[data-field="projects"]');
     if (!list) return;
     list.innerHTML = "";
-    projects.forEach((project, i) => {
+    (projects || []).forEach((project) => {
       const card = document.createElement("article");
       card.className = "work-card reveal";
+      const links = project.links || [];
       card.innerHTML =
         '<figure class="work-fig">' +
-        '<canvas class="work-canvas" aria-hidden="true"></canvas>' +
+        (project.thumbnail
+          ? '<img class="work-thumb" src="' + esc(project.thumbnail) + '" alt="' + esc(project.title) + '" loading="lazy">'
+          : '<canvas class="work-canvas" aria-hidden="true"></canvas>') +
         "</figure>" +
         '<div class="work-info">' +
-        '<div class="work-meta">' + project.type.toUpperCase() + "</div>" +
-        "<h3 class=\"work-title\">" + project.title + "</h3>" +
-        '<p class="work-desc">' + project.description + "</p>" +
+        '<div class="work-meta">' + esc((project.type || "Project").toUpperCase()) + "</div>" +
+        "<h3 class=\"work-title\">" + esc(project.title) + "</h3>" +
+        '<p class="work-desc">' + esc(project.description) + "</p>" +
         '<div class="work-tech">' +
-        project.tech.map((t) => "<span class=\"chip\">" + t + "</span>").join("") +
+        (project.tech || []).map((t) => "<span class=\"chip\">" + esc(t) + "</span>").join("") +
         "</div>" +
-        project.links
+        links
           .map(
             (l) =>
-              '<a class="work-link" href="' + l.url + '" target="_blank" rel="noopener">' +
-              "View on " + l.name +
+              '<a class="work-link" href="' + esc(l.url) + '" target="_blank" rel="noopener">' +
+              "View on " + esc(l.name) +
               '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>' +
               "</a>"
           )
@@ -142,17 +183,17 @@
       card.className = "live-card reveal";
       card.innerHTML =
         '<div class="live-meta">' +
-        (project.platform ? "<span>" + project.platform + "</span>" : "") +
-        "<span>" + project.type + "</span>" +
+        (project.platform ? "<span>" + esc(project.platform) + "</span>" : "") +
+        "<span>" + esc(project.type || "Live") + "</span>" +
         "</div>" +
-        "<h3 class=\"live-title\">" + project.title + "</h3>" +
-        '<p class="live-desc">' + project.description + "</p>" +
+        "<h3 class=\"live-title\">" + esc(project.title) + "</h3>" +
+        '<p class="live-desc">' + esc(project.description) + "</p>" +
         (project.technologies && project.technologies.length
           ? '<div class="work-tech">' +
-            project.technologies.map((t) => "<span class=\"chip\">" + t + "</span>").join("") +
+            project.technologies.map((t) => "<span class=\"chip\">" + esc(t) + "</span>").join("") +
             "</div>"
           : "") +
-        '<a class="live-link" href="' + project.url + '" target="_blank" rel="noopener">' +
+        '<a class="live-link" href="' + esc(project.url) + '" target="_blank" rel="noopener">' +
         "Open live" +
         '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>' +
         "</a>";
@@ -163,20 +204,20 @@
   /* ---------- contact ---------- */
 
   function renderContact(data) {
-    const p = data.personal_information;
+    const p = data.personal_information || {};
     const field = (key, value, href) => {
       const el = $(`[data-field="${key}"]`);
-      if (el) {
-        el.textContent = value;
-        el.href = href || value;
-      }
+      if (!el || value == null) return;
+      el.textContent = value;
+      el.href = href || value;
     };
     const linkedin = (data.social_media || []).find((s) => /linkedin/i.test(s.platform));
-    field("phone", p.phone, "tel:" + p.phone.replace(/[^+\d]/g, ""));
-    field("email", p.email, "mailto:" + p.email);
-    field("artstation", "ArtStation ↗", p.portfolio && p.portfolio.url);
-    field("linkedin", "LinkedIn ↗", linkedin && linkedin.url);
-    field("resume", "Resume (PDF)", p.resume);
+    if (p.phone) field("phone", p.phone, "tel:" + String(p.phone).replace(/[^+\d]/g, ""));
+    if (p.email) field("email", p.email, "mailto:" + p.email);
+    if (p.portfolio && p.portfolio.url) field("artstation", "ArtStation ↗", p.portfolio.url);
+    const linkedinUrl = linkedin ? linkedin.url : "https://www.linkedin.com/in/zulfekar-ahmad-2172361b8/";
+    field("linkedin", "LinkedIn ↗", linkedinUrl);
+    if (p.resume) field("resume", "Resume (PDF)", p.resume);
   }
 
   /* ---------- scroll reveals ---------- */
@@ -412,11 +453,80 @@
 
   /* ---------- nav state ---------- */
 
+  function initNavToggle() {
+    const nav = $(".nav");
+    const btn = $("[data-nav-toggle]");
+    if (!nav || !btn) return;
+    const links = $(".nav-links");
+
+    const setOpen = (open) => {
+      nav.classList.toggle("nav-open", open);
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    };
+
+    btn.addEventListener("click", () =>
+      setOpen(!nav.classList.contains("nav-open"))
+    );
+    if (links) {
+      links.addEventListener("click", (e) => {
+        const a = e.target.closest("a");
+        if (!a) return;
+        const href = a.getAttribute("href") || "";
+        // Same-page hash (e.g. "#expertise" on index.html) — handle smooth scroll
+        if (href.startsWith("#")) {
+          const resolved = resolveHash(href);
+          const target = document.querySelector(resolved) || document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            requestAnimationFrame(() => setOpen(false));
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+            history.pushState(null, "", resolved);
+            return;
+          }
+        }
+        // Cross-page hash like "index.html#expertise" from models.html — if the
+        // hash target exists on current page (already on index.html), treat as
+        // same-page to avoid reload.
+        if (href.includes("#")) {
+          const hash = href.slice(href.indexOf("#"));
+          const resolved = resolveHash(hash);
+          const target = document.querySelector(resolved) || document.querySelector(hash);
+          const isIndex = /(^|\/)index\.html$/.test(location.pathname) || location.pathname === "/" || location.pathname.endsWith("/Portfolio/") || location.pathname.endsWith("/Portfolio/index.html");
+          if (target && isIndex && href.includes("index.html")) {
+            e.preventDefault();
+            requestAnimationFrame(() => setOpen(false));
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+            history.pushState(null, "", resolved);
+            return;
+          }
+        }
+        // Default: cross-page nav — defer close so mobile pointer-events
+        // transition doesn't cancel navigation (double-tap bug).
+        requestAnimationFrame(() => setOpen(false));
+      });
+    }
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") setOpen(false);
+    });
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 820) setOpen(false);
+    });
+  }
+
   function initNavState() {
     const links = $$(".nav-links a");
     const map = {};
     links.forEach((a) => {
-      map[a.getAttribute("href").slice(1)] = a;
+      const href = a.getAttribute("href") || "";
+      const hash = href.includes("#") ? href.slice(href.indexOf("#")) : href;
+      if (!hash) return;
+      const resolved = resolveHash(hash);
+      map[hash] = a;
+      if (resolved !== hash) map[resolved] = a;
+      // also map alias keys for active state when observing old id
+      const rev = Object.keys(HASH_ALIAS).find((k) => HASH_ALIAS[k] === hash);
+      if (rev) map[rev] = a;
     });
     if (!("IntersectionObserver" in window)) return;
     const io = new IntersectionObserver(
@@ -424,13 +534,67 @@
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
           links.forEach((a) => a.classList.remove("active"));
-          const link = map[entry.target.id];
+          const direct = map["#" + entry.target.id];
+          const aliased = map[resolveHash("#" + entry.target.id)];
+          const link = direct || aliased;
           if (link) link.classList.add("active");
         });
       },
       { rootMargin: "-40% 0px -55% 0px" }
     );
     $$("main section").forEach((s) => io.observe(s));
+  }
+
+  /* ---------- scroll to top ---------- */
+
+  function initScrollTop() {
+    let btn = document.getElementById("scroll-top");
+    if (!btn) {
+      btn = document.createElement("button");
+      btn.id = "scroll-top";
+      btn.className = "scroll-top";
+      btn.type = "button";
+      btn.setAttribute("aria-label", "Back to top");
+      btn.innerHTML =
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+      document.body.appendChild(btn);
+    }
+    const toggle = () => {
+      if (window.scrollY > 400) btn.classList.add("visible");
+      else btn.classList.remove("visible");
+    };
+    window.addEventListener("scroll", toggle, { passive: true });
+    toggle();
+    btn.addEventListener("click", () =>
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    );
+  }
+
+  function initScrollRestoration() {
+    const isReload = isReloadNavigation();
+    // on reload: remove hash (e.g. #contact) and force top — same as first open
+    if (isReload && location.hash) {
+      try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+    }
+    if (isReload) {
+      window.scrollTo(0, 0);
+      requestAnimationFrame(() => window.scrollTo(0, 0));
+      setTimeout(() => window.scrollTo(0, 0), 0);
+    } else if (!location.hash) {
+      // normal load without hash — ensure top (handles browser restore)
+      window.scrollTo(0, 0);
+      requestAnimationFrame(() => window.scrollTo(0, 0));
+      setTimeout(() => window.scrollTo(0, 0), 0);
+    }
+    // bfcache restore (back/forward) — if persisted and it's a reload-like restore, clear hash
+    window.addEventListener("pageshow", (e) => {
+      if (!e.persisted) return;
+      const reload = isReloadNavigation();
+      if (reload && location.hash) {
+        try { history.replaceState(null, "", location.pathname + location.search); } catch (err) {}
+      }
+      if (reload || !location.hash) window.scrollTo(0, 0);
+    });
   }
 
   /* ---------- boot ---------- */
@@ -443,11 +607,14 @@
     }
     initReveals();
     initTheme();
+    initNavToggle();
     initTextReveals();
     initHeroEntrance();
     initHeroScroll();
     initNavState();
     initSectionFX();
+    initScrollTop();
+    initScrollRestoration();
 
     try {
       const data = await loadData();
@@ -460,6 +627,17 @@
       initReveals();
       initSectionFX();
       if (window.initStudies) window.initStudies();
+      // Cross-page hash (e.g. models.html -> index.html#expertise) — only when
+      // not a reload. On reload we already stripped the hash and forced top.
+      if (location.hash && !isReloadNavigation()) {
+        const hash = resolveHash(location.hash);
+        const target = document.querySelector(hash) || document.querySelector(location.hash);
+        if (target) {
+          requestAnimationFrame(() => {
+            setTimeout(() => target.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
+          });
+        }
+      }
     } catch (err) {
       console.error("Failed to load portfolio data:", err);
       renderError();

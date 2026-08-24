@@ -1,5 +1,14 @@
-/* models page — renders model cards and boots live previews */
-import { getModelsData, resolveModelFile } from "./model-data.js";
+/* models page — renders model cards with thumbnails */
+import { getModelsData, resolveModelThumb } from "./model-data.js";
+
+/* data content is untrusted — escape before it touches innerHTML */
+const esc = (v) =>
+  String(v == null ? "" : v)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 
 (async () => {
   const grid = document.querySelector('[data-field="models"]');
@@ -21,24 +30,48 @@ import { getModelsData, resolveModelFile } from "./model-data.js";
   }
 
   grid.innerHTML = "";
-  models.forEach((model, i) => {
+  const cards = models.map((model, i) => {
     const card = document.createElement("article");
     card.className = "model-card reveal";
     card.innerHTML =
-      '<figure class="model-fig"><canvas class="model-canvas" aria-hidden="true"></canvas></figure>' +
+      '<figure class="model-fig' + (model.thumbnail ? "" : " model-fig-none") + '">' +
+      (model.thumbnail
+        ? '<img class="model-thumb" alt="' + esc(model.title) + '" loading="lazy">'
+        : '<span class="model-no-thumb">No thumbnail</span>') +
+      "</figure>" +
       '<div class="model-info">' +
-      '<div class="model-type">' + (model.type || "3D model").toUpperCase() + "</div>" +
-      '<h2 class="model-title">' + model.title + "</h2>" +
-      '<p class="model-desc">' + (model.description || "") + "</p>" +
+      '<div class="model-type">' + esc((model.type || "3D model").toUpperCase()) + "</div>" +
+      '<h2 class="model-title">' + esc(model.title) + "</h2>" +
+      '<p class="model-desc">' + esc(model.description || "") + "</p>" +
       '<a class="model-link" href="model.html?i=' + i + '">View full' +
       '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a>' +
       "</div>";
     grid.appendChild(card);
+    return card;
   });
 
-  document.querySelectorAll(".model-canvas").forEach(async (canvas, i) => {
-    const url = await resolveModelFile(models[i]);
-    window.zulfCreateViewer(canvas, { url, label: models[i].title });
+  models.forEach(async (model, i) => {
+    if (!model.thumbnail) return;
+    const src = await resolveModelThumb(model);
+    const img = cards[i].querySelector(".model-thumb");
+    if (!img) return;
+    if (src) {
+      /* a dead thumbnail URL should never show a broken-image glyph */
+      img.addEventListener("error", () => {
+        const fig = img.closest(".model-fig");
+        if (fig) {
+          fig.classList.add("model-fig-none");
+          fig.innerHTML = '<span class="model-no-thumb">No thumbnail</span>';
+        }
+      });
+      img.src = src;
+    } else {
+      const fig = img.closest(".model-fig");
+      if (fig) {
+        fig.classList.add("model-fig-none");
+        fig.innerHTML = '<span class="model-no-thumb">No thumbnail</span>';
+      }
+    }
   });
 
   if (window.zulfReveal) {

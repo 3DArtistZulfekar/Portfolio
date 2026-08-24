@@ -1,10 +1,56 @@
 {
   "models": [
     {
-      "title": "Noble Isle",
-      "type": "Environment",
-      "description": "A hand-built stylized island study, presented as a real-time turntable.",
-      "file": "assets/models/Noble_Isle.fbx"
+      "title": "Perfume",
+      "type": "FBX",
+      "description": "A hand-built stylized perfume, presented as a real-time turntable.",
+      "file": "assets/models/Noble_Isle.fbx",
+      "thumbnail": "assets/models/1000078504.png"
+    },
+    {
+      "title": "Iphone 11",
+      "type": "FBX",
+      "description": "Iphone 11 Model without texture",
+      "file": "assets/models/Iphone_11_V04.fbx",
+      "thumbnail": "assets/models/1000078502.webp"
+    },
+    {
+      "title": "Battery",
+      "type": "FBX",
+      "description": "Battery Without Texture",
+      "file": "assets/models/503743D_V07.fbx",
+      "thumbnail": "assets/models/1000078503.jpg"
+    },
+    {
+      "title": "Pebble Study",
+      "type": "GLB",
+      "description": "Real-time GLB form study — clay-shaded organic pebble.",
+      "file": "assets/models/study_pebble.glb",
+      "thumbnail": ""
+    },
+    {
+      "title": "new cat",
+      "type": "new cat",
+      "description": "new cat",
+      "file": "assets/models/sdsdsds/12161_Cat_v1_L2.obj",
+      "textures": [
+        "assets/models/sdsdsds/12261_Cat_diffuse.jpg"
+      ]
+    },
+    {
+      "title": "Firepit",
+      "type": "GLB",
+      "description": "Firepit Burner",
+      "file": "assets/models/tikifirepitretreat/TikiFirePitRetreat.glb",
+      "textures": [
+        "assets/models/tikifirepitretreat/1000078724.png"
+      ]
+    },
+    {
+      "title": "Boy",
+      "type": "FBX",
+      "description": "Hkkkkk",
+      "file": "assets/models/dggg/nobita.obj"
     }
   ]
 }
