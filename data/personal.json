@@ -18,7 +18,7 @@
       }
     ]
   },
-  "professional_summary": "A skilled 3D Artist with 5+ years of experience specializing in AR-ready 3D models, environments, props, product visualization, and animation. Experienced in creating high-quality, optimized 3D assets and engaging digital experiences across a wide range of projects.\n\nI help businesses bring their products to life through interactive 3D experiences, web-based product configurators, AR-ready assets, and high-quality product animations for marketing and advertising. My work combines strong artistic skills with technical optimization to create visually impactful content that enhances customer engagement, strengthens product presentation, and supports brand communication.\n\nFrom concept to final delivery, I focus on creating high-quality 3D solutions that help businesses showcase their products, enhance their digital presence, and connect with their audience more effectively.",
+  "professional_summary": "A 3D Artist with 5+ years of experience specializing in AR-ready 3D models, environments, props, product visualization, and animation. Expert in creating high-quality, optimized 3D assets and engaging digital experiences across a wide range of projects.\n\nI help businesses bring their products to life through interactive 3D experiences, web-based product configurators, AR-ready assets, and high-quality product animations for marketing and advertising.\n\nFrom concept to final delivery, I focus on creating high-quality 3D solutions that help businesses showcase their products, enhance their digital presence, and connect with their audience more effectively.",
   "languages": [
     "English",
     "Hindi",
@@ -53,10 +53,11 @@
     },
     {
       "job_title": "3D Junior Artist",
+      "company": "Amazon",
       "period": "Aug 2022 - Oct 2023",
       "responsibilities": [
-        "Worked in a challenging environment and specialized in modelling and texturing low-poly environments from 2D concept art.",
-        "Created various environments for educational animated videos."
+       "Specialized in modelling and texturing of real-time, low-poly assets for use in Amazon AR.",
+        "Created and refined models using scan data for Amazon AR."
       ]
     },
     {
@@ -64,8 +65,8 @@
       "company": "BYJU'S The Learning App",
       "period": "Nov 2021 - Jul 2022",
       "responsibilities": [
-        "Specialized in modelling and texturing of real-time, low-poly assets for use in Amazon AR.",
-        "Created and refined models using scan data for Amazon AR."
+         "Worked in a challenging environment and specialized in modelling and texturing low-poly environments from 2D concept art.",
+        "Created various environments for educational animated videos."
       ]
     }
   ],
