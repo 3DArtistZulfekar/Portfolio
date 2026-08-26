@@ -604,7 +604,13 @@ html[data-theme="dark"] .model-card:hover {
   border: 1px solid var(--line-strong);
   border-radius: 12px;
   padding: 1.35rem 1.4rem;
+  cursor: pointer;
+  text-decoration: none;
   transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+a.live-card:hover {
+  text-decoration: none;
 }
 
 .live-meta {
@@ -675,7 +681,13 @@ html[data-theme="dark"] .model-card:hover {
   border: 1px solid var(--line-strong);
   border-radius: 12px;
   overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
   transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+a.model-card:hover {
+  text-decoration: none;
 }
 
 .model-fig {

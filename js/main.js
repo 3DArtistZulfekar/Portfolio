@@ -179,8 +179,15 @@
     if (!list) return;
     list.innerHTML = "";
     (projects || []).forEach((project) => {
-      const card = document.createElement("article");
+      const hasUrl = !!(project.url && String(project.url).trim());
+      const card = document.createElement(hasUrl ? "a" : "article");
       card.className = "live-card reveal";
+      if (hasUrl) {
+        card.href = project.url;
+        card.target = "_blank";
+        card.rel = "noopener";
+        card.setAttribute("aria-label", "Open live: " + (project.title || ""));
+      }
       card.innerHTML =
         '<div class="live-meta">' +
         (project.platform ? "<span>" + esc(project.platform) + "</span>" : "") +
@@ -192,11 +199,7 @@
           ? '<div class="work-tech">' +
             project.technologies.map((t) => "<span class=\"chip\">" + esc(t) + "</span>").join("") +
             "</div>"
-          : "") +
-        '<a class="live-link" href="' + esc(project.url) + '" target="_blank" rel="noopener">' +
-        "Open live" +
-        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>' +
-        "</a>";
+          : "");
       list.appendChild(card);
     });
   }

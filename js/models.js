@@ -31,8 +31,10 @@ const esc = (v) =>
 
   grid.innerHTML = "";
   const cards = models.map((model, i) => {
-    const card = document.createElement("article");
+    const card = document.createElement("a");
     card.className = "model-card reveal";
+    card.href = "model.html?i=" + i;
+    card.setAttribute("aria-label", "Open " + (model.title || "3D model"));
     card.innerHTML =
       '<figure class="model-fig' + (model.thumbnail ? "" : " model-fig-none") + '">' +
       (model.thumbnail
@@ -43,8 +45,6 @@ const esc = (v) =>
       '<div class="model-type">' + esc((model.type || "3D model").toUpperCase()) + "</div>" +
       '<h2 class="model-title">' + esc(model.title) + "</h2>" +
       '<p class="model-desc">' + esc(model.description || "") + "</p>" +
-      '<a class="model-link" href="model.html?i=' + i + '">View full' +
-      '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a>' +
       "</div>";
     grid.appendChild(card);
     return card;
