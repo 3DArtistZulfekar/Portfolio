@@ -163,11 +163,87 @@ function createViewer(container, opts = {}) {
   scene.add(group);
 
   let hasModel = false;
+  let ready = false;
   const setCaption = (text) => {
     if (opts.onCaption) opts.onCaption(text);
   };
 
-  function addFallback() {
+  /* ---------- loader plumbing (model.html only) ---------- */
+  const stageEl = container.closest(".model-stage");
+  const loaderEl = stageEl ? stageEl.querySelector(".model-stage-loader") : null;
+  const loaderBar = loaderEl ? loaderEl.querySelector(".model-loader-bar") : null;
+  const loaderStatus = loaderEl ? loaderEl.querySelector("#model-loader-status") : null;
+
+  let loaderDismissed = false;
+  let pendingObject = null;
+  let geometryReady = false;
+  let managerRef = null;
+
+  const setProgress = (pct, label) => {
+    const p = Math.max(0, Math.min(100, Math.round(pct)));
+    if (loaderBar) loaderBar.style.width = p + "%";
+    if (loaderStatus && label) loaderStatus.textContent = label;
+    if (typeof opts.onProgress === "function") {
+      try { opts.onProgress(p); } catch (_) {}
+    }
+  };
+
+  const reveal = () => {
+    if (loaderDismissed) return;
+    loaderDismissed = true;
+    ready = true;
+    hasModel = true;
+    if (typeof opts.onReady === "function") {
+      try { opts.onReady(); } catch (_) {}
+    }
+    if (loaderEl) {
+      setProgress(100, "Ready — 100%");
+      loaderEl.setAttribute("aria-busy", "false");
+      // allow 100% to be seen briefly, then fade
+      setTimeout(() => {
+        loaderEl.classList.add("is-hidden");
+        if (stageEl) stageEl.classList.add("is-ready");
+        if (renderer && renderer.domElement) renderer.domElement.style.opacity = "1";
+      }, 350);
+      setTimeout(() => {
+        if (loaderEl) loaderEl.style.display = "none";
+      }, 900);
+    } else {
+      if (stageEl) stageEl.classList.add("is-ready");
+      if (renderer && renderer.domElement) renderer.domElement.style.opacity = "1";
+    }
+  };
+
+  const tryReveal = () => {
+    if (geometryReady && pendingObject == null) {
+      // geometry + manager idle
+      if (managerRef && managerRef.isLoading) return;
+      reveal();
+    }
+  };
+
+  if (loaderEl) {
+    loaderEl.classList.remove("is-hidden");
+    loaderEl.removeAttribute("hidden");
+    loaderEl.style.display = "";
+    loaderEl.setAttribute("aria-busy", "true");
+    if (stageEl) stageEl.classList.remove("is-ready");
+    if (loaderBar) loaderBar.style.width = "0%";
+    if (loaderStatus) loaderStatus.textContent = "Preparing model… 0%";
+    if (renderer && renderer.domElement) {
+      renderer.domElement.style.opacity = "0";
+      renderer.domElement.style.transition = "opacity 0.45s ease";
+    }
+    // safety: if nothing loads in 20s, reveal fallback
+    setTimeout(() => { if (!loaderDismissed) { addFallback(); reveal(); } }, 20000);
+  } else {
+    // hero / cards: canvas visible immediately
+    if (renderer && renderer.domElement) renderer.domElement.style.opacity = "1";
+    ready = true;
+  }
+
+  async function addFallback() {
+    if (hasModel) return;
     const maquette = new THREE.Mesh(new THREE.IcosahedronGeometry(0.9, 4), CLAY());
     maquette.position.y = 0.95;
     maquette.castShadow = true;
@@ -188,9 +264,16 @@ function createViewer(container, opts = {}) {
 
     setCaption(opts.fallbackLabel || "Form study");
     hasModel = true;
+    if (loaderEl) {
+      setProgress(100, "Ready — 100%");
+      // tiny delay so progress hits 100% before fade
+      setTimeout(reveal, 200);
+    } else {
+      ready = true;
+    }
   }
 
-  function placeObject(object) {
+  async function placeObject(object) {
     const box = new THREE.Box3().setFromObject(object);
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
@@ -206,7 +289,31 @@ function createViewer(container, opts = {}) {
     /* keep materials that carry textures; clay only for bare meshes */
     const texUrls = (opts.textures || []).filter(Boolean);
     const firstTex = texUrls.length ? (texUrls[0].url || texUrls[0]) : null;
-    const texLoader = new THREE.TextureLoader();
+
+    // Use the same manager so manual texture is tracked in progress/idle check
+    const texLoader = managerRef ? new THREE.TextureLoader(managerRef) : new THREE.TextureLoader();
+
+    // Pre-load first texture if needed — awaits so black material is never shown
+    let preloadedTex = null;
+    if (firstTex) {
+      // check if any mesh already has maps; if so we keep original
+      let needsTex = false;
+      object.traverse((child) => {
+        if (!child.isMesh) return;
+        const mats = Array.isArray(child.material) ? child.material : [child.material];
+        if (!mats.some(hasMaps)) needsTex = true;
+      });
+      if (needsTex) {
+        preloadedTex = await new Promise((resolve) => {
+          texLoader.load(
+            firstTex,
+            (t) => { t.colorSpace = THREE.SRGBColorSpace; resolve(t); },
+            undefined,
+            () => resolve(null)
+          );
+        });
+      }
+    }
 
     object.traverse((child) => {
       if (!child.isMesh) return;
@@ -218,14 +325,15 @@ function createViewer(container, opts = {}) {
         mats.forEach((m) => {
           if (m && m.map) m.map.colorSpace = THREE.SRGBColorSpace;
         });
-      } else if (firstTex) {
-        const tex = texLoader.load(firstTex);
-        tex.colorSpace = THREE.SRGBColorSpace;
+      } else if (preloadedTex) {
         child.material = new THREE.MeshStandardMaterial({
-          map: tex,
+          map: preloadedTex,
           roughness: 0.85,
           metalness: 0.02,
         });
+      } else if (firstTex && !preloadedTex) {
+        // fallback: still assign but should have been preloaded; keep clay if failed
+        child.material = CLAY();
       } else {
         child.material = CLAY();
       }
@@ -233,22 +341,86 @@ function createViewer(container, opts = {}) {
 
     group.add(object);
     setCaption(opts.label || "Model");
-    hasModel = true;
+    // don't set hasModel/ready yet — wait for manager idle + double rAF
+    pendingObject = null;
+    geometryReady = true;
+
+    // if manager still loading (embedded textures), wait for its onLoad
+    if (managerRef && managerRef.isLoading) {
+      const prevOnLoad = managerRef.onLoad;
+      managerRef.onLoad = () => {
+        if (typeof prevOnLoad === "function") try { prevOnLoad(); } catch (_) {}
+        // ensure one rendered frame with textures before reveal
+        requestAnimationFrame(() => requestAnimationFrame(reveal));
+      };
+      return;
+    }
+    // otherwise reveal on next frames so texture is uploaded to GPU
+    requestAnimationFrame(() => requestAnimationFrame(reveal));
   }
 
   if (opts.url) {
     try {
       /* blob: URLs have no extension — pass the original file via opts.format */
       const manager = textureManager(opts.textures);
+      managerRef = manager;
+
+      // progress for texture + model dependencies (up to ~85%)
+      manager.onProgress = (url, loaded, total) => {
+        const pct = total ? Math.round((loaded / total) * 85) : 0;
+        setProgress(pct, "Loading assets… " + pct + "%");
+      };
+      const prevManagerLoad = manager.onLoad;
+      manager.onLoad = () => {
+        if (typeof prevManagerLoad === "function") try { prevManagerLoad(); } catch (_) {}
+        tryReveal();
+      };
+      manager.onError = () => {};
+
       const loader = loaderFor(isBlobUrl(opts.url) ? opts.format : opts.url, manager);
-      loader.load(opts.url, (object) => {
-        /* GLTFLoader returns { scene, ... } instead of a plain object */
-        placeObject(object.scene || object);
-      }, undefined, addFallback);
+      pendingObject = true;
+      setProgress(8, "Loading model… 8%");
+      loader.load(
+        opts.url,
+        async (object) => {
+          /* GLTFLoader returns { scene, ... } instead of a plain object */
+          const root = object.scene || object;
+          pendingObject = root;
+          setProgress(88, "Applying materials… 88%");
+          try {
+            await placeObject(root);
+          } catch (e) {
+            console.warn("placeObject failed", e);
+            await addFallback();
+            reveal();
+          }
+        },
+        (ev) => {
+          // XHR progress for the main file (0–85% -> mapped to 8–80%)
+          if (ev && ev.lengthComputable && ev.total) {
+            const pct = Math.round((ev.loaded / ev.total) * 72) + 8;
+            setProgress(Math.min(80, pct), "Loading model… " + Math.min(80, pct) + "%");
+          } else if (ev && ev.loaded) {
+            // unknown total: pulse a bit
+            const pct = Math.min(80, 12 + Math.round(ev.loaded / 12000));
+            setProgress(pct, "Loading model… " + pct + "%");
+          }
+        },
+        async () => {
+          pendingObject = null;
+          await addFallback();
+          if (loaderEl) setProgress(100, "Ready — 100%");
+          reveal();
+        }
+      );
     } catch (err) {
+      pendingObject = null;
       addFallback();
+      reveal();
     }
   } else {
+    pendingObject = null;
+    geometryReady = true;
     addFallback();
   }
 
@@ -279,6 +451,8 @@ function createViewer(container, opts = {}) {
     scene,
     camera,
     onFrame() {
+      // keep model hidden / frozen until fully textured and loader dismissed
+      if (!ready) return;
       if (!REDUCED) {
         if (!dragging) autoYaw += 0.01;
         group.rotation.y = autoYaw + dragYaw;

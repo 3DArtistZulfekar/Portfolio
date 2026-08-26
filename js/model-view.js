@@ -66,7 +66,11 @@ import { getModelsData, resolveModelFile, resolveModelTextures, resolveModelThum
   if (canvas) {
     const url = await resolveModelFile(model);
     const textures = await resolveModelTextures(model);
-    window.zulfCreateViewer(canvas, {
+    // loader elements — the viewer (init.js) drives them, but we keep a handle for safety
+    const loaderEl = document.getElementById("model-loader");
+    const loaderBar = document.getElementById("model-loader-bar");
+    const loaderStatus = document.getElementById("model-loader-status");
+    const entry = window.zulfCreateViewer(canvas, {
       url,
       format: model.file,
       textures,
@@ -74,7 +78,24 @@ import { getModelsData, resolveModelFile, resolveModelTextures, resolveModelThum
       onCaption: (text) => {
         if (caption) caption.textContent = text;
       },
+      onProgress: (pct) => {
+        // viewer already updates the bar; keep aria status in sync for edge cases
+        if (loaderBar) loaderBar.style.width = pct + "%";
+        if (loaderStatus && pct < 100) loaderStatus.textContent = "Loading assets… " + pct + "%";
+      },
+      onReady: () => {
+        if (caption && caption.textContent === "Loading model…") {
+          caption.textContent = model.title;
+        }
+      },
     });
+    // safety: if viewer failed to init, dismiss loader so page is not stuck
+    if (!entry && loaderEl) {
+      loaderEl.classList.add("is-hidden");
+      loaderEl.setAttribute("aria-busy", "false");
+      document.querySelector(".model-stage")?.classList.add("is-ready");
+      if (caption) caption.textContent = "Could not load 3D preview.";
+    }
 
     /* download the model file */
     const dl = document.getElementById("btn-download");

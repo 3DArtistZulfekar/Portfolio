@@ -97,9 +97,20 @@
       <a class="model-back" href="models.html">&larr; 3D Assets</a>
       <h1 class="model-view-title" data-field="model-title">Loading…</h1>
       <p class="model-view-type" data-field="model-type">…</p>
-      <figure class="model-stage">
-        <div class="model-stage-canvas" id="model-scene"></div>
-        <div class="stage-tools">
+       <figure class="model-stage">
+         <div class="model-stage-canvas" id="model-scene"></div>
+         <!-- industry-standard loader — visible until geometry + textures are fully ready -->
+         <div class="model-stage-loader" id="model-loader" aria-live="polite" aria-busy="true">
+           <div class="model-loader-card" role="status" aria-label="Loading 3D model">
+             <div class="model-loader-ring" aria-hidden="true"></div>
+             <div class="model-loader-copy">
+               <p class="model-loader-title">Loading 3D Asset</p>
+               <p class="model-loader-sub" id="model-loader-status">Preparing model… 0%</p>
+             </div>
+             <div class="model-loader-track" aria-hidden="true"><div class="model-loader-bar" id="model-loader-bar"></div></div>
+           </div>
+         </div>
+         <div class="stage-tools">
           <button class="stage-tool" type="button" id="btn-fullscreen" aria-label="Full screen" title="Full screen">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/></svg>
           </button>
