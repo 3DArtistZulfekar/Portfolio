@@ -474,8 +474,7 @@ function initTurntable() {
   if (!container) return;
   if (caption) caption.textContent = "Loading…";
   createViewer(container, {
-    url: "assets/models/dggg/nobita.obj",
-    label: "Nobita",
+   url: "assets/models/dggg/Helmet.fbx",
     onCaption: (text) => {
       if (caption) caption.textContent = text;
     },
