@@ -5,37 +5,38 @@
       "type": "FBX",
       "description": "A hand-built stylized perfume, presented as a real-time turntable.",
       "file": "assets/models/Noble_Isle.fbx",
-      "thumbnail": "assets/models/1000078504.png"
+      "thumbnail": "assets/models/covers/model-0.png"
     },
     {
-      "title": "Iphone 11",
+      "title": "iPhone 11",
       "type": "FBX",
       "description": "Iphone 11 Model without texture",
       "file": "assets/models/Iphone_11_V04.fbx",
-      "thumbnail": "assets/models/1000078502.webp"
+      "thumbnail": "assets/models/covers/model-1.png"
     },
     {
       "title": "Battery",
       "type": "FBX",
       "description": "Battery Without Texture",
       "file": "assets/models/503743D_V07.fbx",
-      "thumbnail": "assets/models/1000078503.jpg"
+      "thumbnail": "assets/models/covers/model-2.png"
     },
     {
       "title": "Pebble Study",
       "type": "GLB",
-      "description": "Real-time GLB form study — clay-shaded organic pebble.",
+      "description": "Real-time GLB form study \u2014 clay-shaded organic pebble.",
       "file": "assets/models/study_pebble.glb",
-      "thumbnail": ""
+      "thumbnail": "assets/models/covers/model-3.png"
     },
     {
-      "title": "new cat",
-      "type": "new cat",
-      "description": "new cat",
+      "title": "Cat Study",
+      "type": "OBJ",
+      "description": "A textured cat model, presented as an interactive character study.",
       "file": "assets/models/sdsdsds/12161_Cat_v1_L2.obj",
       "textures": [
         "assets/models/sdsdsds/12261_Cat_diffuse.jpg"
-      ]
+      ],
+      "thumbnail": "assets/models/covers/model-4.png"
     },
     {
       "title": "Firepit",
@@ -44,13 +45,15 @@
       "file": "assets/models/tikifirepitretreat/TikiFirePitRetreat.glb",
       "textures": [
         "assets/models/tikifirepitretreat/1000078724.png"
-      ]
+      ],
+      "thumbnail": "assets/models/covers/model-5.png"
     },
     {
       "title": "Boy",
-      "type": "FBX",
-      "description": "Hkkkkk",
-      "file": "assets/models/dggg/nobita.obj"
+      "type": "OBJ",
+      "description": "Character model \u2014 explore the shape, silhouette, and topology in real time.",
+      "file": "assets/models/dggg/nobita.obj",
+      "thumbnail": "assets/models/covers/model-6.png"
     }
   ]
 }

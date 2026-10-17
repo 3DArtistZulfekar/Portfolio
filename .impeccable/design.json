@@ -1,0 +1,324 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-17T11:13:11.715893+00:00",
+  "title": "Design System: Zulfekar Ahmad",
+  "extensions": {
+    "colorMeta": {
+      "bg": {
+        "role": "neutral",
+        "displayName": "Obsidian Room",
+        "tonalRamp": [
+          "oklch(15% 0.004 130)",
+          "oklch(26% 0.004 130)",
+          "oklch(38% 0.004 130)",
+          "oklch(49% 0.004 130)",
+          "oklch(61% 0.004 130)",
+          "oklch(72% 0.004 130)",
+          "oklch(84% 0.004 130)",
+          "oklch(95% 0.004 130)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Charcoal Plinth",
+        "tonalRamp": [
+          "oklch(15% 0.006 125)",
+          "oklch(26% 0.006 125)",
+          "oklch(38% 0.006 125)",
+          "oklch(49% 0.006 125)",
+          "oklch(61% 0.006 125)",
+          "oklch(72% 0.006 125)",
+          "oklch(84% 0.006 125)",
+          "oklch(95% 0.006 125)"
+        ]
+      },
+      "fg": {
+        "role": "neutral",
+        "displayName": "Bone White",
+        "tonalRamp": [
+          "oklch(15% 0.008 110)",
+          "oklch(26% 0.008 110)",
+          "oklch(38% 0.008 110)",
+          "oklch(49% 0.008 110)",
+          "oklch(61% 0.008 110)",
+          "oklch(72% 0.008 110)",
+          "oklch(84% 0.008 110)",
+          "oklch(95% 0.008 110)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Gallery Gray",
+        "tonalRamp": [
+          "oklch(15% 0.012 120)",
+          "oklch(26% 0.012 120)",
+          "oklch(38% 0.012 120)",
+          "oklch(49% 0.012 120)",
+          "oklch(61% 0.012 120)",
+          "oklch(72% 0.012 120)",
+          "oklch(84% 0.012 120)",
+          "oklch(95% 0.012 120)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Fine Rule",
+        "tonalRamp": [
+          "oklch(15% 0.016 125)",
+          "oklch(26% 0.016 125)",
+          "oklch(38% 0.016 125)",
+          "oklch(49% 0.016 125)",
+          "oklch(61% 0.016 125)",
+          "oklch(72% 0.016 125)",
+          "oklch(84% 0.016 125)",
+          "oklch(95% 0.016 125)"
+        ]
+      },
+      "acid": {
+        "role": "primary",
+        "displayName": "Acid Yellow",
+        "tonalRamp": [
+          "oklch(15% 0.17 119)",
+          "oklch(26% 0.17 119)",
+          "oklch(38% 0.17 119)",
+          "oklch(49% 0.17 119)",
+          "oklch(61% 0.17 119)",
+          "oklch(72% 0.17 119)",
+          "oklch(84% 0.17 119)",
+          "oklch(95% 0.17 119)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Dark Ink",
+        "tonalRamp": [
+          "oklch(15% 0.025 125)",
+          "oklch(26% 0.025 125)",
+          "oklch(38% 0.025 125)",
+          "oklch(49% 0.025 125)",
+          "oklch(61% 0.025 125)",
+          "oklch(72% 0.025 125)",
+          "oklch(84% 0.025 125)",
+          "oklch(95% 0.025 125)"
+        ]
+      },
+      "error": {
+        "role": "semantic",
+        "displayName": "Warm Error",
+        "tonalRamp": [
+          "oklch(15% 0.08 55)",
+          "oklch(26% 0.08 55)",
+          "oklch(38% 0.08 55)",
+          "oklch(49% 0.08 55)",
+          "oklch(61% 0.08 55)",
+          "oklch(72% 0.08 55)",
+          "oklch(84% 0.08 55)",
+          "oklch(95% 0.08 55)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Monumental statements; mobile sizing is recorded in DESIGN.md."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings and related fluid large titles."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Editorial work titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default reading text."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Navigation, metadata and form labels."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Compact, semibold action labels."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "state-transition",
+        "value": "0.2s",
+        "purpose": "Button fills, link colors and upload boundaries."
+      },
+      {
+        "name": "segmented-transition",
+        "value": "0.25s",
+        "purpose": "Material selection colors and directional affordances."
+      },
+      {
+        "name": "editorial-ease",
+        "value": "cubic-bezier(.16,1,.3,1)",
+        "purpose": "Large image and introductory display transitions."
+      },
+      {
+        "name": "image-transition",
+        "value": "0.9s",
+        "purpose": "Editorial image hover zoom."
+      },
+      {
+        "name": "display-entrance",
+        "value": "1400ms",
+        "purpose": "Initial title reveal when reduced motion is not requested."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce",
+        "purpose": "Disable decorative animation, CSS transitions, smooth scrolling and automatic object motion; retain manual controls."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "narrow-phone",
+        "value": "370px"
+      },
+      {
+        "name": "phone",
+        "value": "700px"
+      },
+      {
+        "name": "portfolio-intermediate",
+        "value": "1000px"
+      },
+      {
+        "name": "studio-intermediate",
+        "value": "1100px"
+      },
+      {
+        "name": "wide",
+        "value": "1700px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Compact action with an explicit hover and keyboard focus state.",
+      "html": "<button class=\"ds-button ds-primary\">Save draft</button>",
+      "css": ".ds-button{display:inline-flex;justify-content:center;align-items:center;gap:24px;min-height:48px;padding:12px 21px;font:600 12px/1.65 var(--body,Manrope,Arial,sans-serif);border:1px solid transparent;border-radius:2px;cursor:pointer;transition:background .2s,transform .2s}.ds-button:hover{transform:translateY(-2px)}.ds-button:disabled{opacity:.45;cursor:wait}.ds-button:focus-visible{outline:2px solid var(--acid,#d5f35a);outline-offset:6px}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}.ds-button:hover{transform:none}}.ds-primary{background:var(--acid,#d5f35a);color:var(--ink,#171c0d);border-color:transparent}.ds-primary:hover{background:#e6ff88}"
+    },
+    {
+      "name": "Dark Button",
+      "kind": "button",
+      "refersTo": "button-dark",
+      "description": "Compact action with an explicit hover and keyboard focus state.",
+      "html": "<button class=\"ds-button ds-dark\">Explore models</button>",
+      "css": ".ds-button{display:inline-flex;justify-content:center;align-items:center;gap:24px;min-height:48px;padding:12px 21px;font:600 12px/1.65 var(--body,Manrope,Arial,sans-serif);border:1px solid transparent;border-radius:2px;cursor:pointer;transition:background .2s,transform .2s}.ds-button:hover{transform:translateY(-2px)}.ds-button:disabled{opacity:.45;cursor:wait}.ds-button:focus-visible{outline:2px solid var(--acid,#d5f35a);outline-offset:6px}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}.ds-button:hover{transform:none}}.ds-dark{background:var(--ink,#171c0d);color:var(--acid,#d5f35a);border-color:transparent}.ds-dark:hover{background:#333f19}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Compact action with an explicit hover and keyboard focus state.",
+      "html": "<button class=\"ds-button ds-secondary\">Cancel</button>",
+      "css": ".ds-button{display:inline-flex;justify-content:center;align-items:center;gap:24px;min-height:48px;padding:12px 21px;font:600 12px/1.65 var(--body,Manrope,Arial,sans-serif);border:1px solid transparent;border-radius:2px;cursor:pointer;transition:background .2s,transform .2s}.ds-button:hover{transform:translateY(-2px)}.ds-button:disabled{opacity:.45;cursor:wait}.ds-button:focus-visible{outline:2px solid var(--acid,#d5f35a);outline-offset:6px}@media(prefers-reduced-motion:reduce){.ds-button{transition:none}.ds-button:hover{transform:none}}.ds-secondary{background:transparent;color:var(--fg,#edeee8);border-color:#55594a}.ds-secondary:hover{background:#2c3025}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "A studio field with a visible label and acid keyboard focus.",
+      "html": "<label class=\"ds-field\">Model title<input placeholder=\"Name your model\" value=\"Sculpture study\"></label>",
+      "css": ".ds-field{display:block;font:400 12px/1.65 var(--body,Manrope,Arial,sans-serif);color:#e1e4d8}.ds-field input{display:block;width:100%;background:#1b1e17;border:1px solid #414737;border-radius:2px;padding:12px;color:var(--fg,#edeee8);margin-top:8px;caret-color:var(--acid,#d5f35a);font:inherit}.ds-field input::placeholder{color:#a1aa92}.ds-field input:hover{border-color:#616851}.ds-field input:focus-visible{outline:2px solid var(--acid,#d5f35a);outline-offset:2px}"
+    },
+    {
+      "name": "Gallery Navigation",
+      "kind": "nav",
+      "description": "Fine-rule navigation with compact Manrope links.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Gallery\"><a href=\"#work\">Work</a><a href=\"#models\">Models</a><a href=\"#studio\">Studio</a></nav>",
+      "css": ".ds-nav{display:flex;gap:39px;padding:24px 0;border-bottom:1px solid var(--line,#363830);font:400 12px/1.65 var(--body,Manrope,Arial,sans-serif)}.ds-nav a{color:var(--fg,#edeee8);text-decoration:none;transition:color .2s}.ds-nav a:hover{color:var(--acid,#d5f35a)}.ds-nav a:focus-visible{outline:2px solid var(--acid,#d5f35a);outline-offset:6px}@media(max-width:700px){.ds-nav{gap:19px}}@media(prefers-reduced-motion:reduce){.ds-nav a{transition:none}}"
+    },
+    {
+      "name": "Gallery Filters",
+      "kind": "chip",
+      "refersTo": "filter",
+      "description": "Squared filter buttons; acid fill identifies the selected category.",
+      "html": "<div class=\"ds-filters\"><button class=\"ds-filter ds-selected\" aria-pressed=\"true\">All models</button><button class=\"ds-filter\" aria-pressed=\"false\">Objects</button></div>",
+      "css": ".ds-filters{display:flex;flex-wrap:wrap;gap:8px}.ds-filter{background:none;border:1px solid var(--line,#363830);color:var(--fg,#edeee8);border-radius:2px;padding:9px 17px;min-height:40px;font:400 12px/1.65 var(--body,Manrope,Arial,sans-serif);cursor:pointer}.ds-filter.ds-selected{background:var(--acid,#d5f35a);border-color:var(--acid,#d5f35a);color:var(--ink,#171c0d)}.ds-filter:focus-visible{outline:2px solid var(--acid,#d5f35a);outline-offset:6px}"
+    },
+    {
+      "name": "Companion File Tag",
+      "kind": "chip",
+      "refersTo": "companion-tag",
+      "description": "A wrapping file tag with an inline removal control.",
+      "html": "<span class=\"ds-tag\">surface-texture.png<button aria-label=\"Remove surface-texture.png\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m6 6 12 12M18 6 6 18\"/></svg></button></span>",
+      "css": ".ds-tag{background:#252a1e;color:#bcc6a6;display:inline-flex;align-items:center;gap:8px;font:400 12px/1.65 var(--body,Manrope,Arial,sans-serif);padding:5px 8px;border-radius:2px;max-width:100%;overflow-wrap:anywhere}.ds-tag button{display:flex;cursor:pointer;background:none;border:0;padding:2px;color:inherit}.ds-tag svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:1.5}.ds-tag button:focus-visible{outline:2px solid var(--acid,#d5f35a);outline-offset:6px}"
+    },
+    {
+      "name": "Model Card",
+      "kind": "card",
+      "refersTo": "model-card",
+      "description": "Flat stage with an honest model placeholder and an editorial caption.",
+      "html": "<a class=\"ds-card\" href=\"#model\"><div class=\"ds-card-art\"><span class=\"ds-card-format\">GLB</span><svg viewBox=\"0 0 100 100\" aria-hidden=\"true\"><path d=\"m50 12 33 19v38L50 88 17 69V31zM17 31l33 19 33-19M50 50v38M50 12v38\"/></svg></div><h2>Sculpture study</h2><p>Interactive 3D model</p></a>",
+      "css": ".ds-card{display:block;color:var(--fg,#edeee8);text-decoration:none;max-width:360px}.ds-card-art{height:250px;position:relative;display:grid;place-items:center;overflow:hidden;background:#1e201a}.ds-card-format{position:absolute;top:15px;left:15px;color:#aeb4a0;font:400 12px/1.65 var(--body,Manrope,Arial,sans-serif);letter-spacing:.06em}.ds-card-art svg{width:100px;height:100px;fill:none;stroke:var(--acid,#d5f35a);stroke-width:.45;transition:transform .6s}.ds-card h2{font:700 28px/1.2 var(--display,Barlow,\"Arial Narrow\",sans-serif);margin:15px 0 7px}.ds-card p{font:400 12px/1.8 var(--body,Manrope,Arial,sans-serif);color:var(--muted,#a3a59c);margin:0}.ds-card:hover svg{transform:scale(1.05)}.ds-card:focus-visible{outline:2px solid var(--acid,#d5f35a);outline-offset:6px}@media(prefers-reduced-motion:reduce){.ds-card svg{transition:none}.ds-card:hover svg{transform:none}}"
+    },
+    {
+      "name": "Material Segments",
+      "kind": "custom",
+      "refersTo": "segmented",
+      "description": "Source material and wireframe modes represented by clear pressed states.",
+      "html": "<div class=\"ds-segments\" aria-label=\"Material mode\"><button class=\"ds-active\" aria-pressed=\"true\">Original</button><button aria-pressed=\"false\">Wireframe</button></div>",
+      "css": ".ds-segments{display:inline-flex;background:#20221d;padding:4px;border:1px solid #45483d;border-radius:4px;gap:2px}.ds-segments button{border:0;background:transparent;color:#b9bcae;font:400 12px/1.65 var(--body,Manrope,Arial,sans-serif);padding:8px 17px;min-height:34px;border-radius:2px;cursor:pointer;transition:background .25s,color .25s}.ds-segments button.ds-active{background:var(--acid,#d5f35a);color:var(--ink,#171c0d)}.ds-segments button:focus-visible{outline:2px solid var(--acid,#d5f35a);outline-offset:6px}@media(prefers-reduced-motion:reduce){.ds-segments button{transition:none}}"
+    },
+    {
+      "name": "Model Upload Target",
+      "kind": "custom",
+      "refersTo": "drop-zone",
+      "description": "Dashed file target with a real file-selection control; drag-over styling follows the source.",
+      "html": "<div class=\"ds-drop\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 16V3m-5 5 5-5 5 5M4 15v6h16v-6\"/></svg><strong>Drop your model here</strong><span>GLB, glTF, FBX or OBJ</span><label class=\"ds-file\">Choose model<input type=\"file\" accept=\".glb,.gltf,.fbx,.obj\"></label></div>",
+      "css": ".ds-drop{border:1px dashed #616851;background:#1a1e15;text-align:center;min-height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:25px;color:var(--fg,#edeee8);font:400 12px/1.65 var(--body,Manrope,Arial,sans-serif);transition:background .2s,border-color .2s}.ds-drop.ds-dragover{background:#2b3518;border-color:var(--acid,#d5f35a)}.ds-drop>svg{width:32px;height:32px;fill:none;stroke:var(--acid,#d5f35a);stroke-width:1.5;margin-bottom:15px}.ds-drop>strong{font-size:16px;font-weight:500}.ds-drop>span{color:var(--muted,#a3a59c);margin:8px 0 18px}.ds-file{position:relative;overflow:hidden;cursor:pointer;background:var(--acid,#d5f35a);color:var(--ink,#171c0d);padding:8px 15px;border-radius:2px;font-weight:600}.ds-file input{position:absolute;opacity:0;inset:0;width:100%;height:100%;cursor:pointer}.ds-file:focus-within{outline:2px solid var(--acid,#d5f35a);outline-offset:4px}.ds-file:hover{background:#e6ff88}@media(prefers-reduced-motion:reduce){.ds-drop{transition:none}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Digital Sculpture Exhibition",
+    "overview": "A dark exhibition space puts real-time objects, photographic work and monumental lettering in the foreground. Charcoal carries the room; bone-white condensed typography gives it scale; acid yellow directs attention and occasionally becomes the entire surface.\n\nThe interface combines cinematic presentation with clear studio tools. Generous editorial spacing surrounds the work, while compact Manrope labels, fine rules and nearly square controls keep navigation, uploads and material changes precise. Motion follows the object or the action, with reduced-motion and non-WebGL fallbacks.",
+    "keyCharacteristics": [
+      "Monumental condensed display type with compact, readable interface text.",
+      "Charcoal and bone-white neutrals punctuated by acid yellow.",
+      "Flat architectural surfaces, fine dividers and real 3D depth.",
+      "Small squared controls; circles reserved for directional affordances.",
+      "Responsive editorial grids and explicit interactive states."
+    ],
+    "rules": [
+      {
+        "name": "The Acid Signal Rule",
+        "body": "Use acid yellow for actionable emphasis, selected states and intentional full-surface inversions. Pair its filled surfaces with dark ink.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "Use Barlow for display statements and work titles; use Manrope for reading, navigation, metadata and controls.",
+        "section": "typography"
+      },
+      {
+        "name": "The Object Owns Depth Rule",
+        "body": "Let actual geometry, lighting, imagery and tonal surfaces create depth. Keep interface panels and controls free of decorative drop shadows.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use the existing charcoal, bone-white and acid-yellow roles.",
+      "Do preserve oversized condensed headings while letting functional text remain readable.",
+      "Do use fine rules and surface changes to organize tools and metadata.",
+      "Do retain visible keyboard focus, selected controls and honest loading or error feedback.",
+      "Do collapse complex layouts on phones and preserve reduced-motion and non-WebGL alternatives."
+    ],
+    "donts": [
+      "Don't add decorative panel shadows or round every container into a card.",
+      "Don't use display typography for field labels, instructions or longer prose.",
+      "Don't let decorative motion override reduced-motion preferences.",
+      "Don't show a saved local draft as a published model."
+    ]
+  }
+}
