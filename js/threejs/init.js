@@ -293,6 +293,18 @@ function createViewer(container, opts = {}) {
     // Use the same manager so manual texture is tracked in progress/idle check
     const texLoader = managerRef ? new THREE.TextureLoader(managerRef) : new THREE.TextureLoader();
 
+    // FBX imports Phong materials; explicit PBR sets need standard materials.
+    const materials = new Map();
+    await Promise.all(Object.entries(opts.materials || {}).map(async ([name, maps]) => {
+      const params = { name, roughness: 1, metalness: maps.metalnessMap ? 1 : 0 };
+      await Promise.all(Object.entries(maps).map(async ([slot, url]) => {
+        const texture = await texLoader.loadAsync(url);
+        texture.colorSpace = slot === "map" ? THREE.SRGBColorSpace : THREE.NoColorSpace;
+        params[slot] = texture;
+      }));
+      materials.set(name, new THREE.MeshStandardMaterial(params));
+    }));
+
     // Pre-load first texture if needed — awaits so black material is never shown
     let preloadedTex = null;
     if (firstTex) {
@@ -319,6 +331,11 @@ function createViewer(container, opts = {}) {
       if (!child.isMesh) return;
       child.castShadow = true;
       child.receiveShadow = true;
+
+      if (materials.has(child.name)) {
+        child.material = materials.get(child.name);
+        return;
+      }
 
       const mats = Array.isArray(child.material) ? child.material : [child.material];
       if (mats.some(hasMaps)) {
@@ -466,15 +483,37 @@ function createViewer(container, opts = {}) {
   return entry;
 }
 
-/* ---------- hero: Noble Isle turntable ---------- */
+/* ---------- hero: helmet turntable ---------- */
 
 function initTurntable() {
   const container = document.getElementById("turntable-scene");
   const caption = document.getElementById("hero-caption");
   if (!container) return;
   if (caption) caption.textContent = "Loading…";
+
+  const materials = {};
+  const textures = [];
+  const slots = {
+    BaseColor: "map",
+    Normal: "normalMap",
+    Roughness: "roughnessMap",
+    Metalness: "metalnessMap",
+  };
+  for (const part of ["Body", "Glass"]) {
+    materials[part] = {};
+    for (const [suffix, slot] of Object.entries(slots)) {
+      const url = `assets/models/dggg/Helmet_${part}_${suffix}.jpg`;
+      materials[part][slot] = url;
+      // Remap the legacy PNG references stored inside the FBX to the JPEG exports.
+      textures.push({ name: `FBX2_${part}_${suffix}.png`, url });
+    }
+  }
+
   createViewer(container, {
-   url: "assets/models/dggg/Helmet.fbx",
+    url: "assets/models/dggg/Helmet.fbx",
+    label: "Helmet",
+    textures,
+    materials,
     onCaption: (text) => {
       if (caption) caption.textContent = text;
     },

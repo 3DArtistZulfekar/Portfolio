@@ -1,0 +1,240 @@
+{
+  "personal_information": {
+    "name": "Zulfekar Ahmad",
+    "title": "3D Artist",
+    "phone": "+91 6363941085",
+    "email": "zulfekarahmad15@gmail.com",
+    "address": "Uttrahalli, Bengaluru, Karnataka 560061",
+    "portfolio": {
+      "platform": "ArtStation",
+      "username": "zulfekarahmad15",
+      "url": "https://www.artstation.com/zulfekarahmad15"
+    },
+    "social_media": [
+      {
+        "platform": "LinkedIn",
+        "username": "zulfekarahmad15",
+        "url": "https://www.linkedin.com/in/zulfekar-ahmad-2172361b8/"
+      }
+    ]
+  },
+  "professional_summary": "A 3D Artist with 5+ years of experience specializing in AR-ready 3D models, environments, props, product visualization, and animation. Expert in creating high-quality, optimized 3D assets and engaging digital experiences across a wide range of projects.\n\nI help businesses bring their products to life through interactive 3D experiences, web-based product configurators, AR-ready assets, and high-quality product animations for marketing and advertising.\n\nFrom concept to final delivery, I focus on creating high-quality 3D solutions that help businesses showcase their products, enhance their digital presence, and connect with their audience more effectively.",
+  "languages": [
+    "English",
+    "Hindi",
+    "Urdu"
+  ],
+  "hard_skills": [
+    "Autodesk Maya",
+    "Blender",
+    "ZBrush",
+    "Substance Painter",
+    "Substance Sampler",
+    "Adobe Photoshop",
+    "Adobe Illustrator",
+    "Adobe After Effects",
+    "Adobe Premiere Pro",
+    "Marmoset Toolbag"
+  ],
+  "education": [
+    {
+      "qualification": "B.Sc in Graphics and VFX - Jain University Bangalore"
+    }
+  ],
+  "professional_experience": [
+    {
+      "job_title": "3D Artist",
+      "company": "Digitize Solutions",
+      "period": "Nov 2023 - Present",
+      "responsibilities": [
+        "Created 3D models and converted CAD data into optimized assets for web-based 3D product configurators and interactive visualization.",
+        "Worked on modeling, optimization, UVs, materials, and scene setup to ensure smooth real-time performance.",
+        "Integrated 3D assets into configurator scenes, enabling customers to interactively visualize and customize products.",
+        "Managed multiple client projects under tight deadlines, delivering high-quality work with minimal feedback and fast client approvals."
+        
+      ]
+    },
+    {
+      "job_title": "3D Junior Artist",
+      "company": "Amazon",
+      "period": "Aug 2022 - Oct 2023",
+      "responsibilities": [
+       "Created and optimized low-poly 3D assets for real-time Amazon AR experiences.",
+        "Worked with scan data to build accurate, production-ready 3D models.",
+        "Handled modeling, retopology, UV mapping, and texturing for AR-ready assets.",
+        "Optimized geometry and textures while maintaining visual quality and real-time performance."
+      
+        
+        
+        
+      ]
+    },
+    {
+      "job_title": "Associate CGI",
+      "company": "BYJU'S The Learning App",
+      "period": "Nov 2021 - Jul 2022",
+      "responsibilities": [
+         "Worked in a fast-paced and challenging environment, delivering high-quality 3D assets within tight deadlines.",
+        "Created diverse 3D environments, props, and assets for educational animated videos.",
+        "Translated 2D concepts into visually appealing 3D scenes while maintaining the required style and quality.",
+        "Worked closely with the creative team to deliver assets within project requirements and timelines."
+        
+        
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "title": "AR Product Configurator",
+      "type": "AR Experience",
+      "thumbnail": "assets/models/Live_Projects.jpg",
+      "tech": [
+        "Three.js",
+        "WebXR",
+        "Marmoset Toolbag"
+      ],
+      "description": "Interactive 3D product visualization with augmented reality for e-commerce, enabling customers to preview products in their space.",
+      "links": [
+        {
+          "name": "ArtStation",
+          "url": "https://www.artstation.com/artwork/vz2wPA"
+        }
+      ]
+    },
+    {
+      "title": "Low-Poly Environment",
+      "type": "Game Asset",
+      "thumbnail": "assets/models/Low_poly_conference-room.jpg",
+      "tech": [
+        "Blender",
+        "Substance Painter",
+        "Unity"
+      ],
+      "description": "Collection of optimized low-poly environments for real-time rendering in educational and gaming applications.",
+      "links": [
+        {
+          "name": "ArtStation",
+          "url": "https://www.artstation.com/artwork/8bE2GE"
+        }
+      ]
+    },
+    {
+      "title": "Product Visualization Scene",
+      "type": "3D Render",
+      "thumbnail": "assets/models/Perfume_Thumbnail.jpg",
+      "tech": [
+        "Blender",
+        "Cycles",
+        "After Effects"
+      ],
+      "description": "High-quality 3D product visualization with realistic materials and lighting for marketing purposes.",
+      "links": [
+        {
+          "name": "ArtStation",
+          "url": "https://www.artstation.com/artwork/XJv1mn"
+        }
+      ]
+    }
+  ],
+  "live_projects": [
+    {
+      "title": "Milwaukee Tool BOLT 100 Configurator",
+      "type": "Product Configurator",
+      "description": "Interactive product configuration experience created for Milwaukee Tool, bringing configurable product visualization to an online customer experience.",
+      "url": "https://deat.milwaukeetool.eu/bolt-100-konfigurator-1/",
+      "platform": "Threekit",
+      "technologies": [
+        "Threekit",
+        "3D Configurator",
+        "Product Visualization"
+      ]
+    },
+    {
+      "title": "Current Backyard 3D Product Configurator",
+      "type": "Interactive 3D Configurator",
+      "description": "Interactive 3D product visualization experience developed for configurable outdoor products, enabling users to explore product options and visualize their selected configurations in real time.",
+      "url": "https://current-backyard-prod.3kit.com/",
+      "platform": "Threekit",
+      "technologies": [
+        "Threekit",
+        "3D Visualization",
+        "Product Configurator"
+      ]
+    },
+    {
+      "title": "Badlands Gear Bino Builder",
+      "type": "Product Configurator",
+      "description": "Interactive binocular configuration experience allowing customers to explore and customize product options through an engaging 3D interface.",
+      "url": "https://www.badlandsgear.com/pages/bino-builder",
+      "platform": "Threekit",
+      "technologies": [
+        "Threekit",
+        "3D Configurator",
+        "Product Visualization"
+      ]
+    },
+    {
+      "title": "Project Ergo Chair Configurator",
+      "type": "3D Product Configurator",
+      "description": "Interactive chair configuration experience showcasing configurable ergonomic seating products through real-time 3D visualization and product options.",
+      "url": "https://project-ergo.3kit.com/?chairType=Lagos",
+      "platform": "Threekit",
+      "technologies": [
+        "Threekit",
+        "3D Configurator",
+        "Product Visualization",
+        "Interactive 3D"
+      ]
+    },
+    {
+      "title": "Cutest Coops Custom Coop Builder",
+      "type": "3D Product Configurator",
+      "description": "Interactive chicken coop configuration experience allowing customers to customize a product and visualize their selected configuration before purchase.",
+      "url": "https://cutestcoops.com/products/chateau-coop-8x10-configure-your-own",
+      "platform": "Threekit",
+      "technologies": [
+        "Threekit",
+        "3D Configurator",
+        "Product Customization"
+      ]
+    },
+    {
+      "title": "Hestia Sofa Personalisation",
+      "type": "3D Product Personalization",
+      "description": "Interactive sofa personalization experience allowing customers to explore product variations and visualize different configurations before making a purchase.",
+      "url": "https://www.hestiasofa.ma/personnalisation-maeva",
+      "platform": "Threekit",
+      "technologies": [
+        "Threekit",
+        "3D Product Visualization",
+        "Product Personalization"
+      ]
+    },
+    {
+      "title": "Char-Broil Outdoor Kitchen Planner",
+      "type": "3D Kitchen Planner",
+      "description": "Interactive outdoor kitchen planning experience allowing customers to build and visualize modular kitchen configurations in a 3D environment.",
+      "url": "https://www.charbroil.com/pages/outdoor-kitchen-planner",
+      "platform": "Threekit",
+      "technologies": [
+        "Threekit",
+        "3D Configurator",
+        "Kitchen Planner",
+        "Interactive 3D"
+      ]
+    },
+    {
+      "title": "Lilitab Kiosk Builder",
+      "type": "Interactive Product Configurator",
+      "description": "Interactive kiosk configuration experience allowing customers to build and visualize customized kiosk solutions with different product options and accessories.",
+      "url": "https://www.lilitab.com/products/kiosk-builder",
+      "platform": "Threekit",
+      "technologies": [
+        "Threekit",
+        "3D Configurator",
+        "Product Visualization",
+        "Kiosk Configuration"
+      ]
+    }
+  ]
+}
