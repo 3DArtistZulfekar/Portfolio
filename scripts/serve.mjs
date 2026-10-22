@@ -1,7 +1,0 @@
-import http from 'node:http';
-import {readFile,stat} from 'node:fs/promises';
-import path from 'node:path';
-import {fileURLToPath} from 'node:url';
-const root=fileURLToPath(new URL('../',import.meta.url));const port=Number(process.env.PORT||4173);
-const types={'.html':'text/html; charset=utf-8','.css':'text/css','.js':'text/javascript','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.ttf':'font/ttf','.glb':'model/gltf-binary','.gltf':'model/gltf+json','.wasm':'application/wasm','.pdf':'application/pdf'};
-http.createServer(async(req,res)=>{try{const url=new URL(req.url,'http://localhost');let file=decodeURIComponent(url.pathname);if(file.endsWith('/'))file+='index.html';const parts=file.split('/').filter(Boolean);if(parts.some(p=>p.startsWith('.'))||!['index.html','models.html','model.html','admin.html','assets','css','js','data'].includes(parts[0]))throw new Error();const resolved=path.resolve(root,'.'+file);if(!resolved.startsWith(root))throw new Error();if(!(await stat(resolved)).isFile())throw new Error();res.writeHead(200,{'Content-Type':types[path.extname(resolved)]||'application/octet-stream','Cache-Control':'no-cache','X-Content-Type-Options':'nosniff'});res.end(await readFile(resolved));}catch{res.writeHead(404);res.end('Not found');}}).listen(port,'127.0.0.1',()=>console.log('Portfolio preview: http://localhost:'+port));
